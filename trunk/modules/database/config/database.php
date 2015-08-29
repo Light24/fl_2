@@ -62,10 +62,10 @@ return array
     (
         'type'       => 'MySQL',
         'connection' => array(
-            'hostname'   => 'localhost',
+            'hostname'   => 'mysql88215-env-5970640.jelastic.regruhosting.ru',
             'database'   => 'u0070664_default',
             'username'   => 'root',
-            'password'   => '',
+            'password'   => 'BBEare45763',
         ),
         'table_prefix' => '',
         'charset'      => 'utf8',
