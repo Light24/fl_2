@@ -1,4 +1,5 @@
 <?
+defined('SYSPATH') or die();
 
 class Jslogin
 {
@@ -8,40 +9,7 @@ class Jslogin
     if ($jslogin == NULL)
     {
       $jslogin  = new Jslogin();
-      $jslogin->auth_data['vk']['link_auth']              = 'http://oauth.vk.com/authorize';
-      $jslogin->auth_data['vk']['client_id']              = '5037274';
-      $jslogin->auth_data['vk']['client_secret']          = 'QsL7v673BHxvqq2YmjoI';
-      $jslogin->auth_data['vk']['redirect_register_uri']  = 'http://test1.ru/module_users/social_registration/vk';
-      $jslogin->auth_data['vk']['redirect_login_uri']     = 'http://test1.ru/module_users/login/vk';
-      $jslogin->auth_data['vk']['url_token']              = 'https://api.vk.com/oauth/access_token';
-
-      $jslogin->auth_data['fb']['link_auth']              = 'https://www.facebook.com/dialog/oauth';
-      $jslogin->auth_data['fb']['client_id']              = '444980395688774';
-      $jslogin->auth_data['fb']['client_secret']          = '1f7b179477f2495c1cc14a8bb5bfff63';
-      $jslogin->auth_data['fb']['redirect_register_uri']  = 'http://test1.ru/module_users/social_registration/fb';
-      $jslogin->auth_data['fb']['redirect_login_uri']     = 'http://test1.ru/module_users/login/fb';
-      $jslogin->auth_data['fb']['url_token']              = 'https://graph.Facebook.com/oauth/access_token';
-      $jslogin->auth_data['fb']['url_data']               = 'https://graph.Facebook.com/me';
-
-      $jslogin->auth_data['tw']['link_auth']              = 'https://api.twitter.com/oauth/authorize';
-      $jslogin->auth_data['tw']['client_id']              = 'EniHN0iLTy3TAfGHn1s0qSLLs';
-      $jslogin->auth_data['tw']['client_secret']          = 'kib7V3JRd9e3BdkT1EvTz4ksqCyLHXOJ9f7l7VKwezu6euCyTj';
-      $jslogin->auth_data['tw']['redirect_register_uri']  = 'http://test1.ru/module_users/social_registration/tw';
-      $jslogin->auth_data['tw']['redirect_login_uri']     = 'http://test1.ru/module_users/login/tw';
-      $jslogin->auth_data['tw']['url_token']              = 'https://api.twitter.com/oauth/request_token';
-      $jslogin->auth_data['tw']['url_access_token']       = 'https://api.twitter.com/oauth/access_token';
-
-      $jslogin->auth_data['tw']['url_data']               = 'https://api.twitter.com/1.1/users/show.json';
-
-      $jslogin->auth_data['in']['link_auth']              = 'https://api.instagram.com/oauth/authorize';
-      $jslogin->auth_data['in']['client_id']              = 'a7dfd47b923d47d38204316d5d5f9f36';
-      $jslogin->auth_data['in']['client_secret']          = '76bc78a5395541769571ba17d92d25cc';
-      $jslogin->auth_data['in']['redirect_register_uri']  = 'http://test1.ru/module_users/social_registration/in';
-      $jslogin->auth_data['in']['redirect_login_uri']     = 'http://test1.ru/module_users/login/in';
-      $jslogin->auth_data['in']['url_token']              = 'https://api.instagram.com/oauth/access_token';
-      $jslogin->auth_data['in']['url_data']               = '';
-
-
+      $jslogin->auth_data = Kohana::$config->load('social_login_conf');
     }
 
     return $jslogin;
