@@ -1,0 +1,2 @@
+ALTER TABLE  `contest` CHANGE  `dateStart`  `dateStart` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NULL ,
+CHANGE  `dateStop`  `dateStop` TIMESTAMP NULL
