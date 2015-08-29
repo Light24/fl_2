@@ -1,0 +1,1 @@
+<iframe src="/assets/lib/elfinder/elfinder_standalone.html" frameborder="0" style="width: 100%; height: 100%;"></iframe>

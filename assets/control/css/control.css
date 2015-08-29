@@ -1,0 +1,24 @@
+.b-pane .brand{
+    font-size:15px;
+    padding:10px 5px;
+}
+.b-pane .nav>li>a{
+    padding:10px 5px;
+}
+.b-main_content {
+    position: absolute;
+    overflow: auto;
+    top: 41px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    height: auto;
+}
+.navbar .b-loader {
+    width: 32px;
+    height: 40px;
+    background: url("/assets/control/img/loader.gif") no-repeat center center;
+}
+#contestList .k-button{
+    min-width: 0px !important;
+}
