@@ -119,7 +119,7 @@
       $question = htmlspecialchars(Arr::get($_POST, 'textareaask'), ENT_NOQUOTES);
       $id_cat = (int) Arr::get($_POST, 'catId');
       $item = array();
-      $userID = (int) Arr::get(Session::instance()->get('user'), 'id');
+      $userID = intval(Arr::get(Session::instance()->get('user'), 'id'));
 
       if ($id_cat != '' && $question != '')
       {
@@ -127,18 +127,15 @@
           $middle = DOCROOT . 'assets/default/photosQ/middle/';
 
           $date = date("Y-m-d H:i:s");
-          $points = DB::query(Database::SELECT, "SELECT `points` FROM `users` WHERE 
-          `id`=" . $userID)->execute()->get('points');
+          $points = DB::query(Database::SELECT, "SELECT `points` FROM `users` WHERE `id`=" . $userID)->execute()->get('points');
           $points = $points + 10;
+
           $_SESSION['points'] = $points;
           $query = DB::insert('question', array('contest_id', 'user_id', 'text_q', 'date_post', 'ip', 'useragent'))
                           ->values(array($id_cat, $userID, $question, $date, '', ''))->execute();
 
-          $userUpgrade = DB::update('users')->set(array('points' => $points,
-                  ))->where('id', '=', $userID)->execute();
+          DB::update('users')->set(array('points' => $points,))->where('id', '=', $userID)->execute();
           $last_item = DB::select(array(DB::expr("LAST_INSERT_ID()"), "ID"))->execute()->get('ID');
-
-
 
           try
           {
@@ -196,9 +193,7 @@
 
     public function action_get_user_questions()
     {
-      return;
-
-      $userID = intval($this->request->param('userID', 0));
+      $uid = intval($this->request->param('userID', 0));
   /*
       $plusSearch = '';
       $best = '';
@@ -214,70 +209,50 @@
       {
           $plusSearch = ' AND `contest_id`=' . Arr::get($_GET, 'tid') . ' ';
       }*/
-      $user_question = Controller_Question::get_questions(array('userID' => $userID), Controller_Question::$ORDER_BY_LIKE, 0, 10);
-
+      $user_question = Controller_Question::get_questions(array('userID' => $uid), Controller_Question::$ORDER_BY_LIKE, 0, 10);
+      Controller_Users::set_full_avatar_list_path($user_question);
       //print_r(Auth::instance()->get_user());
       //$this->template->pageTitle = 'Результат поиска';
-            $answerArr = array();
-            $query1 = DB::query(Database::SELECT, "SELECT `work_id` FROM `answers_yes` WHERE `user_id`=" . $profileID)
-                            ->execute()->as_array();
+      $answerIDs = array();
+      $tempAnsw  = DB::query(Database::SELECT, 'SELECT `work_id` FROM `answers_yes` WHERE `user_id` = ' . $uid )
+                      ->execute()->as_array();
 
-            foreach ($query1 as $itq) {
-                array_push($answerArr, $itq['work_id']);
-            }
+      foreach ($tempAnsw AS $aswid)
+        array_push($answerIDs, $aswid['work_id']);
 
-            
-            $query2 = DB::query(Database::SELECT, "SELECT `work_id` FROM `answers_no` WHERE `user_id`=" . $profileID)
-                            ->execute()->as_array();
+      $tempAnsw = DB::query(Database::SELECT, 'SELECT `work_id` FROM `answers_no` WHERE `user_id` = ' . $uid)
+                      ->execute()->as_array();
 
-            foreach ($query2 as $itq)
-            {
-              array_push($answerArr, $itq['work_id']);
-            }
+      foreach ($tempAnsw as $aswid)
+        array_push($answerIDs, $aswid['work_id']);
 
-            if (count($answerArr) > 0)
-            {
-                $pSearch = '';
-                $tid = Arr::get($_GET, 'tid');
-                if ($tid != '')
-                {
-                    $pSearch = ' AND `contest_id`=' . $tid . ' ';
-                }
-                $answers = DB::query(Database::SELECT, "SELECT question.*,question.id as
-                                                        uidQuest, category.*,users.*, users.fio as `user`,
-                                                        `l`.`cnt` as `likes`, `ly`.`cnt` as `likey`, `ln`.`cnt` as `liken`
-                                                        FROM `question`
-                                                        LEFT JOIN `users` ON question.user_id = users.id
-                                                        LEFT JOIN `category` ON question.contest_id = category.id
-                                                        
-                                                        LEFT JOIN (SELECT count(*) `cnt`, `work_id` FROM `answers_yes` GROUP BY work_id) as ly  ON question.id = ly.work_id
-                                                        LEFT JOIN (SELECT count(*) `cnt`, `work_id` FROM `answers_no` GROUP BY work_id) as ln  ON question.id = ln.work_id
-                                                        LEFT JOIN (SELECT count(*) `cnt`, `work_id` FROM `answers` GROUP BY work_id) as l  
-                                                        ON question.id = l.work_id
-                                                        WHERE question.user_id<>" . $profileID . $pSearch . " AND question.id IN (" . implode(',', $answerArr) . ")
-                                                        ")->execute()->as_array();
-            }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      $answers = NULL;
+      if (count($answerIDs) > 0)
+      {
+          $pSearch = '';
+          $tid = Arr::get($_GET, 'tid');
+          if ($tid != '')
+          {
+              $pSearch = ' AND `contest_id`=' . $tid . ' ';
+          }
+          $answers = DB::query(Database::SELECT, "SELECT question.*,question.id as
+                                                  uidQuest, category.*,users.*, users.fio as `user`,
+                                                  `l`.`cnt` as `likes`, `ly`.`cnt` as `likey`, `ln`.`cnt` as `liken`
+                                                  FROM `question`
+                                                  LEFT JOIN `users` ON question.user_id = users.id
+                                                  LEFT JOIN `category` ON question.contest_id = category.id
+                                                  
+                                                  LEFT JOIN (SELECT count(*) `cnt`, `work_id` FROM `answers_yes` GROUP BY work_id) as ly  ON question.id = ly.work_id
+                                                  LEFT JOIN (SELECT count(*) `cnt`, `work_id` FROM `answers_no` GROUP BY work_id) as ln  ON question.id = ln.work_id
+                                                  LEFT JOIN (SELECT count(*) `cnt`, `work_id` FROM `answers` GROUP BY work_id) as l  
+                                                  ON question.id = l.work_id
+                                                  WHERE question.user_id<>" . $uid . $pSearch . " AND question.id IN (" . implode(',', $answerIDs) . ")
+                                                  ")->execute()->as_array();
+      }
 
       $this->response->body(View::factory('default/user_questions', array(
-                  'profileID'         => $userID,
-                  'profile'           => $queryResult[0],
+                  'answers'           => $answers,
+                  'profileID'         => $uid,
                   'profile_questions' => $user_question,
                   'user'              => Session::instance()->get('user'),
                   'getBest'           => 0)));

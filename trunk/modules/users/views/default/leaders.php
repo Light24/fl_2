@@ -5,24 +5,22 @@
             <div class="leader-result">
                 <p class="period-p">Период:</p>
                 <ul class="result-ul">
-                    <li><a href="/user/leaders?target=1&d=1">за сутки</a>
+                    <li><a href = '/user/leaders?sort_category=<?= $sort_category ?>&durations=day'>за сутки</a>
                     </li>
-                    <li><a href="/user/leaders?target=1&d=2">за все время</a>
+                    <li><a href = '/user/leaders?sort_category=<?= $sort_category ?>&durations=all'>за все время</a>
                     </li>
                 </ul>
             </div>
             <div class="leader-result nomination">
                 <p class="period-p">Лидеры по:</p>
                 <ul class="result-ul">
-                    <? $target; ?>
+                    <? $sort_category; ?>
 
-                    <li><a <? if ($target != '' && $target != 1) { ?>
-                            style="border-bottom: none;text-decoration: none" <? } ?> 
-                            href="/user/leaders?target=1">набранным баллам</a>
+                    <li><a <? if ($sort_category != '' && $sort_category != 'points') { ?> style="border-bottom: none;text-decoration: none" <? } ?> href="/user/leaders?sort_category=points">набранным баллам</a>
                     </li>
-                    <li><a <? if ($target != 2) { ?> style="border-bottom: none; text-decoration: none" <? } ?>  href="/user/leaders?target=2">количесту ответов</a>
+                    <li><a <? if ($sort_category != 'answers') { ?> style="border-bottom: none; text-decoration: none" <? } ?> href="/user/leaders?sort_category=answers">количесту ответов</a>
                     </li>
-                    <li><a <? if ($target != 3) { ?> style="border-bottom: none; text-decoration: none" <? } ?> href="/user/leaders?target=3">количеству вопросов</a>
+                    <li><a <? if ($sort_category != 'questions') { ?> style="border-bottom: none; text-decoration: none" <? } ?> href="/user/leaders?sort_category=questions">количеству вопросов</a>
                     </li>
                 </ul>
             </div>
@@ -32,12 +30,10 @@
                 <div class="row">
                     <div style="width:100%" class="col-xs-6">
                         <ol class="leader-ul">
-                            <? foreach ($usersA as $itemA) { ?>
+                            <? foreach ($users as $itemA) { ?>
                                 <li style="width:100%">
                                     <a href="/user/<?= $itemA['id'] ?>">
-                                        <img class="base-circle-img img-circle" alt="<?= $itemA['fio'] ?>"
-                                             <? if ($itemA['photo'] != '') { ?> src="/assets/default/avatar/<?= $itemA['photo'] ?>"<? } else { ?>    
-                                                 src="/assets/default/img/base-img.png" <? } ?> />     
+                                        <img class="base-circle-img img-circle" alt="<?= $itemA['fio'] ?>" src="<?= $itemA['photo'] ?>" />
 
                                         <div style="min-width:40%" class="name-members">
                                             <p> <b><?= $itemA['login'] ?></b>
@@ -65,11 +61,11 @@
                                                 $level = 'Просветленный';
                                             }
                                             ?>
-                                            <? if ($target == 1 || $target == '') { ?>
-                                                <?= $itemA['qnt'] . ' - ' . $level ?>
-                                            <? } else { ?>
-                                                <?= $itemA['qnt'] ?>
-                                            <? } ?>
+                                            <?= $itemA['qnt'] ?>
+                                            <?
+                                            if ($sort_category == '' || $sort_category == 'points')
+                                              echo ' - ' . $level;
+                                            ?>
                                         </div>
 
                                     </a>

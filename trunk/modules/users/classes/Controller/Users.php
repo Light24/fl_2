@@ -52,34 +52,51 @@ class Controller_Users extends Controller
                 'user'              => Session::instance()->get('user'),)));
   }
 
+
   public function action_leaders()
   {
-    $target = (int) Arr::get($_GET, 'target');
-    if ($target == 3) {
-        $usersA = DB::query(Database::SELECT, "SELECT user.id,user.photo, user.fio,user.login, 
-        count(question.id) as qnt FROM `users` user 
-        LEFT JOIN `question` question ON user.id=question.user_id group by user.id
-        ORDER BY qnt DESC LIMIT 6
-        ")->execute()->as_array();
-    } elseif ($target == 1 || $target == '') {
-        $usersA = DB::query(Database::SELECT, "SELECT user.id,user.photo, user.fio,user.login, 
-        user.points as qnt FROM `users` user 
-        LEFT JOIN `question` question ON user.id=question.user_id group by user.id
-        ORDER BY qnt DESC LIMIT 6
-        ")->execute()->as_array();
-    } else {
-        $usersA = DB::query(Database::SELECT, "SELECT user.id,user.photo, user.fio,user.login, 
-        count(question.id) as qnt 
-             FROM `users` user 
-             LEFT JOIN `question` question ON user.id=question.user_id group by user.id            
-             ORDER BY id DESC LIMIT 6
-        ")->execute()->as_array();
-    }
-    //$this->template->pageTitle = 'Лидеры';
+    $sort_category = htmlspecialchars(Arr::get($_GET, 'sort_category'), ENT_NOQUOTES);
+    $durations     = htmlspecialchars(Arr::get($_GET, 'durations'), ENT_NOQUOTES);
 
+    switch ($sort_category)
+    {
+      case 'questions':
+      {
+        $users = DB::query(Database::SELECT, "SELECT user.id,user.photo, user.fio,user.login, 
+                                               count(question.id) as qnt FROM `users` user 
+                                               LEFT JOIN `question` question ON user.id=question.user_id group by user.id
+                                               ORDER BY qnt DESC LIMIT 6")->execute()->as_array();
+        break;
+      }
+      case 'answers':
+      {
+        $users = DB::query(Database::SELECT, "SELECT user.id,user.photo, user.fio,user.login, 
+                                               count(question.id) as qnt FROM `users` user 
+                                               LEFT JOIN `question` question ON user.id=question.user_id group by user.id
+                                               ORDER BY id DESC LIMIT 6")->execute()->as_array();
+        break;
+      }
+      case 'points':
+      default:
+      {
+        $where = '';
+        if (strcmp($durations, 'day') === 0)
+          $where = ' WHERE question.date_post >= (NOW() - TIME_TO_SEC(\'24:00:00\')) ';
+
+        $users = DB::query(Database::SELECT, 'SELECT user.id,user.photo, user.fio,user.login, 
+                                               user.points as qnt FROM `users` user 
+                                               LEFT JOIN `question` question ON user.id=question.user_id ' . $where . ' group by user.id
+                                               ORDER BY qnt DESC LIMIT 6')->execute()->as_array();
+        break;
+      }
+    }
+    self::set_full_avatar_list_path($users);
+
+
+    //$this->template->pageTitle = 'Лидеры';
     $this->response->body(View::factory('default/leaders', array(
-                'usersA' => $usersA,
-                'target' => $target,
+                'users' => $users,
+                'sort_category' => $sort_category,
     )));
   }
 
@@ -836,4 +853,3 @@ class Controller_Users extends Controller
 };
 
 ?>
-
