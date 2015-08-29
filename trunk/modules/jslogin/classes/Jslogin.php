@@ -378,8 +378,9 @@ class Jslogin
   {
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_HEADER, false);
-curl_setopt($ch, CURLOPT_CAINFO, 'Z:/usr/local/php5/cacert.pem');
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+    //curl_setopt($ch, CURLOPT_CAINFO, 'Z:/usr/local/php5/cacert.pem');
+    //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
       curl_setopt($ch, CURLOPT_POST, false);
 
       curl_setopt($ch, CURLOPT_URL, $url);
@@ -396,8 +397,9 @@ curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
   {
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_HEADER, false);
-curl_setopt($ch, CURLOPT_CAINFO, 'Z:/usr/local/php5/cacert.pem');
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+    //curl_setopt($ch, CURLOPT_CAINFO, 'Z:/usr/local/php5/cacert.pem');
+    //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
       curl_setopt($ch, CURLOPT_POST, true);
 
       curl_setopt($ch, CURLOPT_URL, $url);
