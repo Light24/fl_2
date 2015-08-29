@@ -35,20 +35,7 @@
                     <div class="quest">
                         <a href="/user/<?= $item_aq['user_id'] ?>">
                             <div class="left-block-q">
-                                <?
-                                $avatarImg = '';
-                                $avatar = $item_aq['photo'];
-                                $avatarPath = '/assets/default/avatar/' . $item_aq['photo'];
-                                if ($avatar != '' && file_exists($avatarPath))
-                                {
-                                    $avatarImg = $avatarPath;
-                                }
-                                else
-                                {
-                                    $avatarImg = '/assets/default/img/base-img.png';
-                                }
-                                ?>
-                                <img class="base-circle-img-center img-circle" alt="<?= $item_aq['login'] ?>" src="<?= $avatarImg ?>" />
+                                <img class="base-circle-img-center img-circle" alt="<?= $item_aq['login'] ?>" src="<?= $item_aq['photo'] ?>" />
                                 <p class="login-name"><?= strip_tags($item_aq['login']); ?></p>
                             </div>
                         </a>
@@ -92,62 +79,45 @@
 
         <div class="tab-pane" id="answer">
 
-
-
 <? if (count($answers) > 0) { ?>
     <?
-    foreach ($answers as $item_aq) {
-        ?>
-                                <? if ($item_aq['liken'] != '' || $item_aq['likey'] != '') { ?>
-                                    <div class="quest">
-                                        <a href="/user/<?= $item_aq['user_id'] ?>">
-                                            <div class="left-block-q">
-                                    <?
-                                    $avatarImg = '';
-                                    $avatar = $item_aq['photo'];
-                                    $avatarPath = '/assets/default/avatar/' . $item_aq['photo'];
-                                    if ($avatar != '' && file_exists($avatarPath)) {
-                                        $avatarImg = $avatarPath;
-                                    } else {
-                                        $avatarImg = '/assets/default/img/base-img.png';
-                                    }
-                                    ?>
-                                                <img class="base-circle-img-center img-circle" alt="<?= $item_aq['login'] ?>" src="<?= $avatarImg ?>" />
-                                                <p class="login-name"><?= strip_tags($item_aq['login']); ?></p>
+    foreach ($answers as $item_aq)
+    {
+    ?>
+        <? if ($item_aq['liken'] != '' || $item_aq['likey'] != '') { ?>
+            <div class="quest">
+                <a href="/user/<?= $item_aq['user_id'] ?>">
+                    <div class="left-block-q">
+                        <img class="base-circle-img-center img-circle" alt="<?= $item_aq['login'] ?>" src="<?= $item_aq['photo'] ?>" />
+                        <p class="login-name"><?= strip_tags($item_aq['login']); ?></p>
+                    </div>
+                </a>
 
-                                            </div>
-                                        </a>
-                                        <div class="right-block-q">
-                                            <p><?= strip_tags($item_aq['text_q']); ?></p>
+                <div class="right-block-q">
+                    <p><?= strip_tags($item_aq['text_q']); ?></p>
+                </div>
 
-                                        </div>
-                                        <div class="end-quest-block">
-                                            <p class="category-txt"><?= strip_tags($item_aq['category']); ?></p>
-                                            <p class="time-q"><?= Controller_Contest::friendlyDate($item_aq['date_post']) ?></p>
-                                            <div class="button-rait">
-                                                <button class="no-btn btn" type="button">Нет(<?= ($item_aq['liken'] != '') ? $item_aq['liken'] : "0"; ?>)</button>
-                                                <button class="yes-btn btn" type="button">Да(<?= ($item_aq['likey'] != '') ? $item_aq['likey'] : "0"; ?>)</button>
+                <div class="end-quest-block">
+                    <p class="category-txt"><?= strip_tags($item_aq['category']); ?></p>
+                    <p class="time-q"><?= Controller_Contest::friendlyDate($item_aq['date_post']) ?></p>
+                    <div class="button-rait">
+                        <button class="no-btn btn" type="button">Нет(<?= ($item_aq['liken'] != '') ? $item_aq['liken'] : "0"; ?>)</button>
+                        <button class="yes-btn btn" type="button">Да(<?= ($item_aq['likey'] != '') ? $item_aq['likey'] : "0"; ?>)</button>
+                    </div>
 
-                                            </div>
-                                            <div class="rait-bl">
-                                                <button class="rait cross  btn" type="button">
-                                                    <img class="plusminus" src="/assets/default/img/cross.png"><span>Пожаловаться</span>
-                                                </button>
-                                                <button class="rait btn plus-rait" type="button">
-                                                    <img class="plusminus" src="/assets/default/img/rait-plus.png"><?= ($item_aq['likes'] != '') ? $item_aq['likes'] : "0"; ?></button>
-
-                                            </div>
-
-
-
-
-                                        </div>
-                                    </div>
+                    <div class="rait-bl">
+                        <button class="rait cross  btn" type="button">
+                            <img class="plusminus" src="/assets/default/img/cross.png"><span>Пожаловаться</span>
+                        </button>
+                        <button class="rait btn plus-rait" type="button">
+                            <img class="plusminus" src="/assets/default/img/rait-plus.png"><?= ($item_aq['likes'] != '') ? $item_aq['likes'] : "0"; ?></button>
+                    </div>
+                </div>
+            </div>
             <?
         }
     }
     ?>
-
                         <? } else { ?>
                             <div class="quest">
                                 <p>Вы еще не задали ни одного вопроса.</p>
