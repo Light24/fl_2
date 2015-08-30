@@ -98,8 +98,7 @@ abstract class Controller_Common extends Controller_Template {
         $userID = $this->request->param('userID');
         $this->template->side_right = Request::factory("user_question/get_cats/$userID")->execute()->body();
 
-        $this->template->footer = View::factory($this->tpl . '/footer', array(
-                                                'auth_links' => Jslogin::instance()->get_authorization_links()));
+        $this->template->footer = View::factory($this->tpl . '/footer');
     }
 
 

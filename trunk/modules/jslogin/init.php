@@ -1,32 +1,16 @@
 <?
 /***************************************** Авторизация через социальные сервесы(vk, facebook, etc) ******************************************/
-  Route::set('ModuleJsLogin', 'js_auth.php')
+  Route::set('ModuleSocialAuth', 'auth/<social_name>', array('social_name' => '[a-z]{2}'))
     -> defaults(array(
          'controller' => 'jslogin',
-         'action'     => 'js_auth',
+         'action'     => 'social_auth',
     )
   );
 
-  Route::set('ModuleJsRegister', 'js_register.php')
+  Route::set('ModuleSocialRegister', 'registration/<social_name>', array('social_name' => '[a-z]{2}'))
     -> defaults(array(
          'controller' => 'jslogin',
-         'action'     => 'js_register',
+         'action'     => 'social_registration',
     )
   );
-
-/*
-Route::set('ModuleUsersSendMessageAjax', 'module_users/ajax_send_message')
-    ->defaults(array(
-        'controller' => 'users',
-        'action'     => 'ajax_send_message',
-      )
-);
-
-Route::set('ModuleUsersPhotoDelete', 'module_users/delete_photo_ajax')
-    ->defaults(array(
-        'controller' => 'users',
-        'action'     => 'delete_photo_ajax',
-      )
-);/*
-
 ?>

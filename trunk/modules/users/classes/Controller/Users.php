@@ -116,7 +116,7 @@ class Controller_Users extends Controller
     $userData['email']   = htmlspecialchars(Arr::get($_POST, 'regEmail'), ENT_NOQUOTES);
 
     //$this->template->pageTitle = 'Регистрация';
-    $this->response->body(View::factory('default/registration', array('userData' => $userData, 'socialRegistration' => Jslogin::instance()->get_register_links())));
+    $this->response->body(View::factory('default/registration', array('userData' => $userData)));
   }
 
 
@@ -363,7 +363,7 @@ class Controller_Users extends Controller
         if (count($queryResult) == 1)
         {
           $this->updateSession($queryResult[0]);
-          header( 'Location: ' . URL::base() . '' ) ; die();
+          header( 'Location: ' . URL::base()) ; die();
           return;
         }
       }
