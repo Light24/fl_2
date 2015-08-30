@@ -122,8 +122,6 @@
                                 <input value="<?/*=$userData['uid_vk']*/?>" class="styler" type="hidden" name="uid_vk" id="uid_vk" />
                                 <input value="<?/*=$userData['uid_fb']*/?>" class="styler" type="hidden" name="uid_fb" id="uid_fb" />
                                 <input value="<?/*=$userData['uid_tw']*/?>" class="styler" type="hidden" name="uid_tw" id="uid_tw" />
-                                <input value="<?/*=$userData['provider_vk']*/?>" class="styler" type="hidden" name="provider_vk" id="provider_vk" />
-                                <input value="<?/*=$userData['provider_fb']*/?>" class="styler" type="hidden" name="provider_fb" id="provider_fb" />
                                 <input class="styler" type="hidden" name="provider_tw" id="provider_tw" />
                             </fieldset>
 
@@ -137,19 +135,19 @@
                             <ul class="sc">
                                 <li>
                                     
-                                    <a href="<?=$socialRegistration['vk']?>">
+                                    <a href='/registration/vk'">
                                         <img class="soc-icons img-circle" alt="VK" src="/assets/default/img/vk.png">Вконтакте</a>
                                 </li>
                                 <li>
-                                    <a href="<?=$socialRegistration['fb']?>">
+                                    <a href='/registration/fb'>
                                         <img class="soc-icons img-circle" alt="FB" src="/assets/default/img/fb.png">Facebook</a>
                                 </li>
                                 <li>
-                                    <a href="<?=$socialRegistration['tw']?>">
+                                    <a href='/registration/tw'>
                                         <img class="soc-icons img-circle" alt="TW" src="/assets/default/img/tw.png">Twitter</a>
                                 </li>
                                 <li>
-                                    <a href="<?=$socialRegistration['in']?>">
+                                    <a href='/registration/in'>
                                         <img class="soc-icons img-circle" alt="IN" src="/assets/default/img/inst.png">Instagram</a>
                                 </li>
                             </ul>

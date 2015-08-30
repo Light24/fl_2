@@ -51,19 +51,19 @@
                             <p>или войдите через один из Ваших аккаунтов:</p>
                             <ul class="sc">
                                 <li>
-                                    <a href="<?= $auth_links['vk']; ?>">
+                                    <a href='/auth/vk'>
                                         <img class="soc-icons img-circle" alt="VK" src="/assets/default/img/vk.png">Вконтакте</a>
                                 </li>
                                 <li>
-                                    <a href="<?= $auth_links['fb']; ?>">
+                                    <a href='/auth/fb'>
                                         <img class="soc-icons img-circle" alt="FB" src="/assets/default/img/fb.png">Facebook</a>
                                 </li>
                                 <li>
-                                    <a href="<?= $auth_links['tw']; ?>">
+                                    <a href='/auth/tw'>
                                         <img class="soc-icons img-circle" alt="TW" src="/assets/default/img/tw.png">Twitter</a>
                                 </li>
                                 <li>
-                                    <a href="<?= $auth_links['in']; ?>">
+                                    <a href='/auth/in'>
                                         <img class="soc-icons img-circle" alt="IN" src="/assets/default/img/inst.png">Instagram</a>
                                 </li>
                             </ul>
