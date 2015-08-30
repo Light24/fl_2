@@ -197,10 +197,8 @@ class Controller_Users extends Controller
     }
 
     $queryResult =  DB::query(Database::SELECT, "SELECT * FROM users WHERE " . $where . " AND confirmed = 1")->execute()->as_array();
-
     if (count($queryResult) == 0)
     {
-
       DB::insert('users', array('fio', 'date_birth', 'city', 'sex',
                   'email', 'uid_vk', 'uid_fb', 'uid_tw', 'uid_in',
                   'password', 'confirmed', 'photo', 'points',
@@ -350,6 +348,11 @@ class Controller_Users extends Controller
 
   private function login_social($prefix, $code)
   {
+    if (self::action_checkout())
+    {
+        header( 'Location: ' . URL::base() . '' ) ; die();
+    }
+
     $loginMethod = 'get_' . $prefix . '_user_id';
     
     if (method_exists(Jslogin::instance(), $loginMethod))
@@ -357,8 +360,7 @@ class Controller_Users extends Controller
       $result = Jslogin::instance()->$loginMethod($code, $uid);
       if ($result)
       {
-        $queryResult = DB::query(Database::SELECT, "SELECT * FROM users WHERE uid_$prefix = '" . $uid . "'");
-        $queryResult = $queryResult->execute()->as_array();
+        $queryResult = DB::query(Database::SELECT, "SELECT * FROM users WHERE uid_$prefix = '" . $uid . "'")->execute()->as_array();
 
         if (count($queryResult) == 1)
         {
