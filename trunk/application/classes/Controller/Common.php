@@ -77,9 +77,10 @@ abstract class Controller_Common extends Controller_Template {
         $this->template->pageTitle = '';
 
         $catsPrefix = Controller_Question::get_prefix_cats();
+        $uid        = $this->request->param('userID', 0);
         $cid        = $this->request->param('catID', 0);
 
-        $this->template->header = View::factory('/header', array('user' => $user, 'catsPrefix' => $catsPrefix, 'cid' => $cid));
+        $this->template->header = View::factory('/header', array('user' => $user, 'catsPrefix' => $catsPrefix, 'uid' => $uid, 'cid' => $cid));
         Session::instance()->set('isMsg', 0);
 
         $user = Session::instance()->get('user', 0);

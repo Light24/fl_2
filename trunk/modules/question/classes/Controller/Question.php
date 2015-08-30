@@ -18,7 +18,11 @@
       $orderBy = intval($this->request->param('orderBY'));
       $orderBy = min(max(self::$ORDER_BY_DATE, $orderBy), self::$ORDER_BY_LIKE);
 
-      $questions = $this->get_questions(array('catID' => $catID), $orderBy, 0, $this->GET_ROWS_COUNT);
+      $conditions = array();
+      $conditions['catID'] = $catID;
+      if (isset($_GET['q']))
+        $conditions['search'] = htmlspecialchars($_GET['q'], ENT_NOQUOTES);
+      $questions = $this->get_questions($conditions, $orderBy, 0, $this->GET_ROWS_COUNT);
       /*$this->template->pageTitle = 'Главная страница';
       //$this->template->pageTitle = 'Все вопросы';*/
 
@@ -219,7 +223,14 @@
       {
           $plusSearch = ' AND `contest_id`=' . Arr::get($_GET, 'tid') . ' ';
       }*/
-      $user_question = Controller_Question::get_questions(array('userID' => $uid, 'catID' => $cid), Controller_Question::$ORDER_BY_LIKE, 0, 10);
+      $conditions = array();
+      $conditions['userID'] = $uid;
+      $conditions['catID']  = $cid;
+      if (isset($_GET['q']))
+        $conditions['search'] = htmlspecialchars($_GET['q'], ENT_NOQUOTES);
+
+      $user_question = Controller_Question::get_questions($conditions, Controller_Question::$ORDER_BY_LIKE, 0, 10);
+      
       Controller_Users::set_full_avatar_list_path($user_question);
       //print_r(Auth::instance()->get_user());
       //$this->template->pageTitle = 'Результат поиска';
@@ -284,7 +295,7 @@
 
 
         if (isset($conditions['search']))
-          $where = (isset($where) ? $where . ' AND ' : '') . ' AND `text_q` LIKE \'%' . htmlspecialchars($conditions['search'], ENT_NOQUOTES) . '\'';
+          $where = (isset($where) ? $where . ' AND ' : '') . ' `text_q` LIKE \'%' . htmlspecialchars($conditions['search'], ENT_NOQUOTES) . '%\'';
 
         if (isset($where))
           $where = ' WHERE ' . $where;
@@ -333,7 +344,12 @@
       $catID        = intval($_POST['catID']);
       $fromQuestion = intval($_POST['fromQuestion']);
 
-      $questions['data'] = $this->get_questions(array('catID' => $catID), ($catID > 0) ? self::$ORDER_BY_DATE : self::$ORDER_BY_LIKE, $fromQuestion, ($this->GET_ROWS_COUNT + 1));
+      $conditions = array();
+      $conditions['catID'] = $catID;
+      if (isset($_GET['q']))
+        $conditions['search'] = htmlspecialchars($_GET['q'], ENT_NOQUOTES);
+
+      $questions['data'] = $this->get_questions($conditions, ($catID > 0) ? self::$ORDER_BY_DATE : self::$ORDER_BY_LIKE, $fromQuestion, ($this->GET_ROWS_COUNT + 1));
       if (count($questions['data']) != ($this->GET_ROWS_COUNT + 1))
       {
         unset($questions['data'][$this->GET_ROWS_COUNT]);
