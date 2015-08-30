@@ -1,27 +1,21 @@
-
                 <div class="right-element">
-
                     <div class="center-block">
                         <p class="add-photo-head">Добро пожаловать!</p>
 
-
                         <form class="fixed form-reg" id="register" name="register" method="POST"  action="#">
-
                             <fieldset>
                                 <div class="form-el">
                                     <p class="formh">Ваше имя:</p>
                                     <input value="<?=$userData['fio']?>" class="styler" type="text" name="regFio" id="regFio" />
                                     <div class="ok hide message-form"></div>
                                     <div class="errorm hide message-form"></div>
-
                                 </div>
-                                
+
                                 <div class="form-el">
                                     <p class="formh">Ваш логин:</p>
                                     <input class="styler" type="text" name="regLogin" id="regLogin" />
                                     <div class="ok hide message-form"></div>
                                     <div class="errorm hide message-form"></div>
-
                                 </div>
 
                                 <div class="form-el">
@@ -33,9 +27,6 @@
                                         for($i=1; $i<=31; $i++){?>
                                         <option value="<?=$i;?>"><?=$i;?></option>    
                                        <? }   ?>
-                                        
-                                        
-
                                     </select>
 
                                     <select name="regBirthMonth" id="regBirthMonth" class="sel-reg">
@@ -56,25 +47,25 @@
 
                                     <select name="regBirthYear" id="regBirthYear" class="sel-reg">
                                         <option value="">год</option>
-                                         <?
-                                        for($i=1940; $i<=$year['year']; $i++){?>
-                                        <option value="<?=$i;?>"><?=$i;?></option>    
-                                       <? }   ?>
+                                        <?
+                                        for($i=1940; $i<=$year['year']; $i++)
+                                        {
+                                        ?>
+                                          <option value="<?= $i; ?>"> <?= $i; ?> </option>
+                                        <?
+                                        }
+                                        ?>
                                     </select>
 
                                     <div class="ok message-form hide"></div>
                                     <div class="errorm hide message-form hide"></div>
-
                                 </div>
 
                                 <div class="form-el">
-                                    <p class="formh">Город:
-
-                                    </p>
+                                    <p class="formh">Город:</p>
                                     <input class="styler" type="text" name="regCity" id="regCity" />
                                     <div class="ok message-form hide"></div>
                                     <div class="errorm hide message-form"></div>
-
                                 </div>
 
                                 <div class="form-el">
@@ -92,25 +83,19 @@
                                     </div>
                                 </div>
 
-
-
-
                                 <div class="form-el">
                                     <p class="formh">E-mail:</p>
                                     <input value="<?=$userData['email']?>" class="styler" type="text" name="regEmail" id="regEmail" />
                                     <div class="ok hide message-form"></div>
                                     <div class="errorm message-form hide"></div>
-
                                 </div>
-                                
+
                                 <div class="form-el">
                                     <p class="formh">Пароль:</p>
                                     <input class="styler" type="password" name="regPsw" id="regPsw" />
                                     <div class="ok hide message-form"></div>
                                     <div class="errorm message-form hide"></div>
-
                                 </div>
-
 
                                 <div class="formstatus"></div>
                                 <div style="z-index: 150; position: relative; float:left; " id="showSuccsReg" class="alert success"><i class=""></i>
@@ -124,9 +109,6 @@
                                 <input value="<?/*=$userData['uid_tw']*/?>" class="styler" type="hidden" name="uid_tw" id="uid_tw" />
                                 <input class="styler" type="hidden" name="provider_tw" id="provider_tw" />
                             </fieldset>
-
-
-                        
                         </form>
                         <a style="line-height:2" class="btn btn-reg" id="reg_submit">Регистрация</a>
 
@@ -151,19 +133,11 @@
                                         <img class="soc-icons img-circle" alt="IN" src="/assets/default/img/inst.png">Instagram</a>
                                 </li>
                             </ul>
-
-
                         </div>
-
-
-
-
-
                     </div>
 </div>
 
 <script>
-
   /*Рег-ция*/
   $(document).ready(function()
   {
@@ -306,29 +280,32 @@
         'init': function() {
             var _this = this;
 
-            register.submit(function(event) {
-
-
-                if (_this.validate()) {
-
+            register.submit(function(event)
+            {
+                if (_this.validate())
+                {
                     event.preventDefault();
 
-                    $.ajax({
+                    $.ajax(
+                    {
                         url: "/module_users/ajax_registration",
                         data: $('#register').serialize(),
                         type: "POST",
                         dataType: "json",
-                        beforeSend: function() {
+                        beforeSend: function()
+                        {
                             $("#showSuccsReg").html("");
                             $("#showSuccsReg").hide();
                             $("#showErrReg").html("");
                             $("#showErrReg").hide();
-
                         }
-                    }).complete(function(json) {
+                    })
+                    complete(function(json)
+                    {
 
-                    }).done(function(json) {
-
+                    })
+                    done(function(json)
+                    {
                         if (json.success === true) {
                             window.location.href = "/user/registration/success";
 
@@ -341,16 +318,12 @@
                     }).error(function() {
                         $("#showErrReg").show();
                         $("#showErrReg").text('Ошибка! Попробуйте позже.');
-
-
                     });
-                    //return _this.onsubmit();
                 } else {
                     event.preventDefault();
-
                 }
             });
-            register.find('input, textarea, select').change(function() {
+            register.find('input, textarea, select').focusout(function() {
 
                 var name = $(this).attr('name');
                 _this.validate(name);
