@@ -27,7 +27,7 @@
     )
   );
 
-  Route::set('ModuleQuestionGetUserQuestions', 'module_question/get_user_questions/<userID>', array('userID' => '[0-9]+'))
+  Route::set('ModuleQuestionGetUserQuestions', 'module_question/get_user_questions/<userID>(/<catID>)', array('userID' => '[0-9]+'), array('catID' => '[0-9]+'))
     ->defaults(array(
         'controller' => 'question',
         'action'     => 'get_user_questions'

@@ -63,11 +63,11 @@
 /********************************************************** Страницы пользовтелей **********************************************************/
     public function action_user_id()
     {
-      $userID = intval($this->request->param('userID', 0));
-      
+      $uid = intval($this->request->param('userID', 0));
+      $cid = intval($this->request->param('catID', 0));
 
-      $user_data     = Request::factory("module_users/get_user/$userID")->execute();
-      $question_data = Request::factory("module_question/get_user_questions/$userID")->execute();
+      $user_data     = Request::factory("module_users/get_user/$uid")->execute();
+      $question_data = Request::factory("module_question/get_user_questions/$uid/$cid")->execute();
 
       $this->template->content = $user_data->body() . $question_data->body();
     }

@@ -53,26 +53,35 @@
                     'questionP' => $questions, 'usersA' => $usersA)));
     }
 
-
-    public function action_get_cats()
+    static public function get_prefix_cats()
     {
-      if ($this->request->param('userID') !== NULL)
+      if (strpos($_SERVER['REQUEST_URI'], 'user') !== FALSE)
       {
-        $linkPrefix = 'user';
-        $userID     = intval($this->request->param('userID'), -1);
+        $linkPrefix = 'user' . '/' . 'question';
       }
-      else if (strcmp($_SERVER['REQUEST_URI'], 'cabinet') === 0)
+      else if (strpos($_SERVER['REQUEST_URI'], 'cabinet') !== FALSE)
       {
-        $linkPrefix = 'cabinet';
+        $linkPrefix = 'cabinet' . '/' . 'question';
       }
-      else if (strcmp($_SERVER['REQUEST_URI'], 'search') === 0)
+      else if (strpos($_SERVER['REQUEST_URI'], 'search') !== FALSE)
       {
-        $linkPrefix = 'search';
+        $linkPrefix = 'search' . '/' . 'question';
       }
       else
       {
         $linkPrefix = 'question';
       }
+      return $linkPrefix;
+    }
+
+
+    public function action_get_cats()
+    {
+      $uid = $this->request->param('userID');
+      $uid = ($uid !== NULL) ? intval($uid) : $uid;
+
+      $linkPrefix = self::get_prefix_cats();
+
 
       //список категорий
       $categories = DB::query(Database::SELECT, "SELECT * FROM `category`")->execute();
@@ -82,8 +91,8 @@
                       'linkPrefix' => $linkPrefix,
                       ));
 
-      if (isset($userID))
-        $content->userID = $userID;
+      if ($uid !== NULL)
+        $content->uid = $uid;
 
       $this->response->body($content);
     }
@@ -194,6 +203,7 @@
     public function action_get_user_questions()
     {
       $uid = intval($this->request->param('userID', 0));
+      $cid = intval($this->request->param('catID', 0));
   /*
       $plusSearch = '';
       $best = '';
@@ -209,7 +219,7 @@
       {
           $plusSearch = ' AND `contest_id`=' . Arr::get($_GET, 'tid') . ' ';
       }*/
-      $user_question = Controller_Question::get_questions(array('userID' => $uid), Controller_Question::$ORDER_BY_LIKE, 0, 10);
+      $user_question = Controller_Question::get_questions(array('userID' => $uid, 'catID' => $cid), Controller_Question::$ORDER_BY_LIKE, 0, 10);
       Controller_Users::set_full_avatar_list_path($user_question);
       //print_r(Auth::instance()->get_user());
       //$this->template->pageTitle = 'Результат поиска';
@@ -252,7 +262,7 @@
 
       $this->response->body(View::factory('default/user_questions', array(
                   'answers'           => $answers,
-                  'profileID'         => $uid,
+                  'uid'               => $uid,
                   'profile_questions' => $user_question,
                   'user'              => Session::instance()->get('user'),
                   'getBest'           => 0)));
