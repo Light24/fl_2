@@ -238,9 +238,18 @@ class Jslogin
 
   public function get_vk_user_data($code, &$userInfo)
   {
-    $result = $this->get_vk_user_id($code, $user_id);
-    if (!$result)
+    $params = array(
+      'client_id'     => $this->auth_data['vk']['client_id'],
+      'client_secret' => $this->auth_data['vk']['client_secret'],
+      'redirect_uri'  => $this->auth_data['vk']['redirect_register_uri'],
+      'code'          => $code,
+      );
+
+    $token = json_decode($this->getHTML($this->auth_data['vk']['url_token'] . '?' . urldecode(http_build_query($params))), true);
+    if (!isset($token['user_id']))
       return false;
+    $user_id = $token['user_id'];
+
 
     $params = array(
       'uids'         => $user_id,
