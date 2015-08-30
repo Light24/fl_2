@@ -27,7 +27,7 @@ class Controller_Jslogin extends Controller
   public function action_social_registration()
   {
     $social_name = htmlspecialchars($this->request->param('social_name'), ENT_NOQUOTES);
-    $links = Jslogin::instance()->get_registration_links();
+    $links = Jslogin::instance()->get_register_links();
     if (!isset($links[$social_name]))
     {
       die();
