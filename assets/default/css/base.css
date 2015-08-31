@@ -1665,6 +1665,7 @@ line-height: 30px;
 .btn-pers-bl {
 float:left;
 width:158px;
+margin-left: 50px;
 }
 
 .btn-pers-bl > ul {
