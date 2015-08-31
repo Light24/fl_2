@@ -208,77 +208,27 @@
     {
       $uid = intval($this->request->param('userID', 0));
       $cid = intval($this->request->param('catID', 0));
-  /*
-      $plusSearch = '';
-      $best = '';
-      $best = Arr::get($_GET, 'best');
 
-      if ($best == 1) {
-          $best = " ORDER BY likey DESC";
-      } else {
-          $best = " ORDER BY question.date_post DESC";
-      }
-      $plusSearch = '';
-      if (Arr::get($_GET, 'tid') != '')
-      {
-          $plusSearch = ' AND `contest_id`=' . Arr::get($_GET, 'tid') . ' ';
-      }*/
       $conditions = array();
       $conditions['userID'] = $uid;
       $conditions['catID']  = $cid;
       if (isset($_GET['q']))
         $conditions['search'] = htmlspecialchars($_GET['q'], ENT_NOQUOTES);
 
-      $user_question = Controller_Question::get_questions($conditions, Controller_Question::$ORDER_BY_LIKE, 0, 10);
-      
+      $user_question = self::get_questions($conditions, Controller_Question::$ORDER_BY_LIKE, 0, 10);
+      $user_answer   = self::get_answers($conditions, Controller_Question::$ORDER_BY_LIKE, 0, 10);
+
       Controller_Users::set_full_avatar_list_path($user_question);
       //print_r(Auth::instance()->get_user());
       //$this->template->pageTitle = 'Результат поиска';
-      $answerIDs = array();
-      $tempAnsw  = DB::query(Database::SELECT, 'SELECT `work_id` FROM `answers_yes` WHERE `user_id` = ' . $uid )
-                      ->execute()->as_array();
-
-      foreach ($tempAnsw AS $aswid)
-        array_push($answerIDs, $aswid['work_id']);
-
-      $tempAnsw = DB::query(Database::SELECT, 'SELECT `work_id` FROM `answers_no` WHERE `user_id` = ' . $uid)
-                      ->execute()->as_array();
-
-      foreach ($tempAnsw as $aswid)
-        array_push($answerIDs, $aswid['work_id']);
-
-      $answers = NULL;
-      if (count($answerIDs) > 0)
-      {
-          $pSearch = '';
-          $tid = Arr::get($_GET, 'tid');
-          if ($tid != '')
-          {
-              $pSearch = ' AND `contest_id`=' . $tid . ' ';
-          }
-          $answers = DB::query(Database::SELECT, "SELECT question.*,question.id as
-                                                  uidQuest, category.*,users.*, users.fio as `user`,
-                                                  `l`.`cnt` as `likes`, `ly`.`cnt` as `likey`, `ln`.`cnt` as `liken`
-                                                  FROM `question`
-                                                  LEFT JOIN `users` ON question.user_id = users.id
-                                                  LEFT JOIN `category` ON question.contest_id = category.id
-                                                  
-                                                  LEFT JOIN (SELECT count(*) `cnt`, `work_id` FROM `answers_yes` GROUP BY work_id) as ly  ON question.id = ly.work_id
-                                                  LEFT JOIN (SELECT count(*) `cnt`, `work_id` FROM `answers_no` GROUP BY work_id) as ln  ON question.id = ln.work_id
-                                                  LEFT JOIN (SELECT count(*) `cnt`, `work_id` FROM `answers` GROUP BY work_id) as l  
-                                                  ON question.id = l.work_id
-                                                  WHERE question.user_id<>" . $uid . $pSearch . " AND question.id IN (" . implode(',', $answerIDs) . ")
-                                                  ")->execute()->as_array();
-      }
 
       $this->response->body(View::factory('default/user_questions', array(
-                  'answers'           => $answers,
+                  'answers'           => $user_answer,
                   'uid'               => $uid,
                   'profile_questions' => $user_question,
                   'user'              => Session::instance()->get('user'),
                   'getBest'           => 0)));
-
-      }
+    }
 
 
   /********************************************************** Служебные фнукции **********************************************************/
@@ -328,10 +278,75 @@
             ON question.id = l.work_id" . (isset($where) ? $where : '') . $order_by . $limit)->execute()->as_array();
 
         return $questions;
-  /*        $this->template->pageTitle = 'Все вопросы';
+    }
 
-      $this->template->scripts = array(
-      );*/
+
+      static public function get_answers($conditions, $order, $offsetRows , $countRows)
+      {
+        if (isset($where))
+          unset($where);
+
+        if (isset($conditions['catID']) && intval($conditions['catID']) > 0)
+          $where = (isset($where) ? $where . ' AND ' : '') . 'question.contest_id = ' . intval($conditions['catID']);
+
+        if (isset($conditions['userID']))
+        {
+          $where_answers = ' WHERE `user_id` = ' . $conditions['userID'];
+          $where         = (isset($where) ? $where . ' AND ' : '') . 'question.user_id <> ' . intval($conditions['userID']);
+        }
+
+        if (isset($conditions['search']))
+          $where = (isset($where) ? $where . ' AND ' : '') . ' `text_q` LIKE \'%' . htmlspecialchars($conditions['search'], ENT_NOQUOTES) . '%\'';
+
+        $order_by = '';
+        if (isset($order))
+        {
+          switch ($order)
+          {
+            case self::$ORDER_BY_DATE:
+              $order_by = ' ORDER BY question.date_post DESC';
+            break;
+            case self::$ORDER_BY_LIKE:
+              $order_by = ' ORDER BY liken DESC';
+            break;
+          }
+        }
+
+      $limit = " LIMIT $offsetRows, $countRows";
+
+      $answerIDs = array();
+      $tempAnsw  = DB::query(Database::SELECT, 'SELECT `work_id` FROM `answers_yes`' . $where_answers)
+                      ->execute()->as_array();
+      foreach ($tempAnsw AS $aswid)
+        array_push($answerIDs, $aswid['work_id']);
+
+      $tempAnsw = DB::query(Database::SELECT, 'SELECT `work_id` FROM `answers_no`' . $where_answers)
+                      ->execute()->as_array();
+      foreach ($tempAnsw as $aswid)
+        array_push($answerIDs, $aswid['work_id']);
+
+      
+      $answers = NULL;
+      if (count($answerIDs) > 0)
+      {
+        $where = (isset($where) ? $where . ' AND ' : '') . " question.id IN (" . implode(',', $answerIDs) . ")";
+        if (isset($where))
+          $where = ' WHERE ' . $where;
+
+
+        $answers = DB::query(Database::SELECT, "SELECT question.*,question.id as
+                                                uidQuest, category.*,users.*, users.fio as `user`,
+                                                `l`.`cnt` as `likes`, `ly`.`cnt` as `likey`, `ln`.`cnt` as `liken`
+                                                FROM `question`
+                                                LEFT JOIN `users` ON question.user_id = users.id
+                                                LEFT JOIN `category` ON question.contest_id = category.id
+
+                                                LEFT JOIN (SELECT count(*) `cnt`, `work_id` FROM `answers_yes` GROUP BY work_id) as ly  ON question.id = ly.work_id
+                                                LEFT JOIN (SELECT count(*) `cnt`, `work_id` FROM `answers_no` GROUP BY work_id) as ln  ON question.id = ln.work_id
+                                                LEFT JOIN (SELECT count(*) `cnt`, `work_id` FROM `answers` GROUP BY work_id) as l
+                                                ON question.id = l.work_id " . $where)->execute()->as_array();
+      }
+      return $answers;
     }
 
 
