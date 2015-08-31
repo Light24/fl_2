@@ -95,8 +95,18 @@
 
     public function action_user_profile()
     {
-      $userRequest = Request::factory("module_users/profile/")->execute();
-      $this->template->content = $userRequest->body();
+      if (!Controller_Users::action_checkout())
+      {
+        HTTP::redirect("/"); die();
+      }
+
+      $user = Session::instance()->get('user');
+      $uid = $user['id'];
+      $cid = intval($this->request->param('catID', 0));
+
+      $userRequest   = Request::factory("module_users/profile/")->execute();
+      $question_data = Request::factory("module_question/get_user_questions/$uid/$cid")->execute();
+      $this->template->content = $userRequest->body() . $question_data->body();
     }
 
     public function action_user_setting()

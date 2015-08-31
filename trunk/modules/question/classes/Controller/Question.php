@@ -25,11 +25,11 @@
       $questions = $this->get_questions($conditions, $orderBy, 0, ($this->GET_ROWS_COUNT + 1));
       Controller_Users::set_full_avatar_list_path($questions);
 
-      $isAllElement = true;
+      $isAllElement = 1;
       if (count($questions) == ($this->GET_ROWS_COUNT + 1))
       {
         unset($questions['data'][$this->GET_ROWS_COUNT]);
-        $isAllElement = false;
+        $isAllElement = 0;
       }
 
 
@@ -226,11 +226,11 @@
         $conditions['search'] = htmlspecialchars($_GET['q'], ENT_NOQUOTES);
 
       $user_question = self::get_questions($conditions, Controller_Question::$ORDER_BY_LIKE, 0, ($this->GET_ROWS_COUNT + 1));
-      $isAllElement = true;
+      $isAllElement = 1;
       if (count($user_question) == ($this->GET_ROWS_COUNT + 1))
       {
-        unset($questions['data'][$this->GET_ROWS_COUNT]);
-        $isAllElement = false;
+        unset($user_question['data'][$this->GET_ROWS_COUNT]);
+        $isAllElement = 0;
       }
 
       $user_answer   = self::get_answers($conditions, Controller_Question::$ORDER_BY_LIKE, 0, 10);
@@ -245,8 +245,7 @@
                   'catID'             => $cid,
                   'questions'         => $user_question,
                   'isAllElement'      => $isAllElement,
-                  'user'              => Session::instance()->get('user'),
-                  'getBest'           => 0)));
+                  'user'              => Session::instance()->get('user'))));
     }
 
 
