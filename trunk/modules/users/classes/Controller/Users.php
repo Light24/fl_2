@@ -36,8 +36,7 @@ class Controller_Users extends Controller
 
     if (count($queryResult) == 1)
     {
-        $profile = Controller_Question::get_questions(array('userID' => $userID), Controller_Question::$ORDER_BY_LIKE, 0, 10);
-        $profile = $profile[0];
+        $profile = $queryResult[0];
     }
     else
     {
