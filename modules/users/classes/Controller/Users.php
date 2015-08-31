@@ -50,16 +50,24 @@ class Controller_Users extends Controller
                 'user'              => Session::instance()->get('user'),)));
   }
 
-  private function get_leaders_by_select_cats($sort_category, $durations_cats)
+  private function get_leaders_by_select_cats($conditions, $sort_type)
   {
-    switch ($sort_category)
+    if (isset($conditions['cid']) && $conditions['cid']['value'] > 0)
+      $where = ' question.contest_id = ' . $conditions['cid']['value'];
+
+    if (isset($conditions['durations_cats']) && strcmp($conditions['durations_cats']['value'], 'week') == 0)
+      $where = (isset($where) ? $where . ' AND ' : '') . ' question.date_post >= (NOW() - TIME_TO_SEC(\'24:00:00\') * 7) ';
+
+    $where = (isset($where) ? ' WHERE ' . $where : '');
+
+    switch ($sort_type)
     {
       case 'questions':
       {
         $users = DB::query(Database::SELECT, "SELECT user.id,user.photo, user.fio,user.login, 
                                                count(question.id) as qnt FROM `users` user 
-                                               LEFT JOIN `question` question ON user.id=question.user_id group by user.id
-                                               ORDER BY qnt DESC LIMIT 6")->execute()->as_array();
+                                               LEFT JOIN `question` question ON user.id=question.user_id " . $where . "
+                                               group by user.id ORDER BY qnt DESC LIMIT 6")->execute()->as_array();
         break;
       }
       case 'answers':
@@ -68,17 +76,13 @@ class Controller_Users extends Controller
                                               (count(answers_yes.work_id) + count(answers_no.work_id)) as qnt FROM `users` user 
                                               LEFT JOIN `question` question ON user.id=question.user_id
                                               LEFT JOIN `answers_no` answers_no ON answers_no.work_id=question.id
-                                              LEFT JOIN `answers_yes` answers_yes ON answers_yes.work_id=question.id
+                                              LEFT JOIN `answers_yes` answers_yes ON answers_yes.work_id=question.id ' . $where . '
                                               group by user.id ORDER BY qnt DESC LIMIT 6')->execute()->as_array();
         break;
       }
       case 'points':
       default:
       {
-        $where = '';
-        if (strcmp($durations_cats, 'week') === 0)
-          $where = ' WHERE question.date_post >= (NOW() - TIME_TO_SEC(\'24:00:00\') * 7) ';
-
         $users = DB::query(Database::SELECT, 'SELECT user.id,user.photo, user.fio,user.login, 
                                                user.points as qnt FROM `users` user 
                                                LEFT JOIN `question` question ON user.id=question.user_id ' . $where . ' group by user.id
@@ -93,16 +97,22 @@ class Controller_Users extends Controller
 
   public function action_leaders()
   {
-    $select_category = htmlspecialchars(Arr::get($_GET, 'select_category'), ENT_NOQUOTES);
-    $durations_cats  = htmlspecialchars(Arr::get($_GET, 'durations'), ENT_NOQUOTES);
+    $sort_type     = htmlspecialchars(Request::initial()->param('sort_type', 'points'), ENT_NOQUOTES);
+    $duration_type = htmlspecialchars(Request::initial()->param('duration_type', 'all'), ENT_NOQUOTES);
+    $cid           = intval(Request::initial()->param('catID'));
 
+    $conditions = array();
+    $conditions['durations_cats']['value'] = $duration_type;
+    $conditions['cid']['value']            = $cid;
 
-    $users = $this->get_leaders_by_select_cats($select_category, $durations_cats);
+    $users = $this->get_leaders_by_select_cats($conditions, $sort_type);
 
     //$this->template->pageTitle = 'Лидеры';
     $this->response->body(View::factory('default/leaders', array(
                 'users'           => $users,
-                'select_category' => $select_category,
+                'select_category' => $sort_type,
+                'cid'             => $cid,
+                'duration_type'   => $duration_type
     )));
   }
 

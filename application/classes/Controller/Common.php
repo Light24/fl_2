@@ -95,7 +95,6 @@ abstract class Controller_Common extends Controller_Template {
         }
 
         $this->template->side_left  = Request::factory("user_question/get_left_questions_best")->execute()->body();
-
         $this->template->side_right = Request::factory('user_question/get_cats/' . $cid .'/' . $uid)->execute()->body();
 
         $this->template->footer = View::factory($this->tpl . '/footer');

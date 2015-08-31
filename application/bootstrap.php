@@ -210,7 +210,7 @@ Route::set('user_profile_setting_photos', 'user/photos(/<uid>)', array('uid' => 
         'action'     => 'user_photos',
       ));
 
-Route::set('user_leaders', 'user/leaders')
+Route::set('user_leaders', 'user/leaders(/<sort_type>(/<duration_type>(/<catID>)))')
     ->defaults(array(
         'controller' => 'manager',
         'action'     => 'user_leaders'
