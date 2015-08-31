@@ -22,15 +22,25 @@
       $conditions['catID'] = $catID;
       if (isset($_GET['q']))
         $conditions['search'] = htmlspecialchars($_GET['q'], ENT_NOQUOTES);
-      $questions = $this->get_questions($conditions, $orderBy, 0, $this->GET_ROWS_COUNT);
+      $questions = $this->get_questions($conditions, $orderBy, 0, ($this->GET_ROWS_COUNT + 1));
+      Controller_Users::set_full_avatar_list_path($questions);
+
+      $isAllElement = true;
+      if (count($questions) == ($this->GET_ROWS_COUNT + 1))
+      {
+        unset($questions['data'][$this->GET_ROWS_COUNT]);
+        $isAllElement = false;
+      }
+
+
       /*$this->template->pageTitle = 'Главная страница';
       //$this->template->pageTitle = 'Все вопросы';*/
 
       $this->response->body(View::factory('default/all', array(
-                  'user'            => $user,
-                  'catID'           => $catID,
-                  'questions'       => $questions,
-                  'questionsCount'  => $this->GET_ROWS_COUNT)));
+                  'user'              => $user,
+                  'catID'             => $catID,
+                  'questions'         => $questions,
+                  'isAllElement'      => $isAllElement)));
     }
 
 
@@ -215,7 +225,14 @@
       if (isset($_GET['q']))
         $conditions['search'] = htmlspecialchars($_GET['q'], ENT_NOQUOTES);
 
-      $user_question = self::get_questions($conditions, Controller_Question::$ORDER_BY_LIKE, 0, 10);
+      $user_question = self::get_questions($conditions, Controller_Question::$ORDER_BY_LIKE, 0, ($this->GET_ROWS_COUNT + 1));
+      $isAllElement = true;
+      if (count($user_question) == ($this->GET_ROWS_COUNT + 1))
+      {
+        unset($questions['data'][$this->GET_ROWS_COUNT]);
+        $isAllElement = false;
+      }
+
       $user_answer   = self::get_answers($conditions, Controller_Question::$ORDER_BY_LIKE, 0, 10);
 
       Controller_Users::set_full_avatar_list_path($user_question);
@@ -225,7 +242,9 @@
       $this->response->body(View::factory('default/user_questions', array(
                   'answers'           => $user_answer,
                   'uid'               => $uid,
-                  'profile_questions' => $user_question,
+                  'catID'             => $cid,
+                  'questions'         => $user_question,
+                  'isAllElement'      => $isAllElement,
                   'user'              => Session::instance()->get('user'),
                   'getBest'           => 0)));
     }
@@ -336,10 +355,11 @@
 
         $answers = DB::query(Database::SELECT, "SELECT question.*,question.id as
                                                 uidQuest, category.*,users.*, users.fio as `user`,
-                                                `l`.`cnt` as `likes`, `ly`.`cnt` as `likey`, `ln`.`cnt` as `liken`
+                                                `l`.`cnt` as `likes`, `ly`.`cnt` as `likey`, `ln`.`cnt` as `liken`, photos_q.*
                                                 FROM `question`
                                                 LEFT JOIN `users` ON question.user_id = users.id
                                                 LEFT JOIN `category` ON question.contest_id = category.id
+                                                LEFT JOIN `photos_q` ON question.id = photos_q.question_id
 
                                                 LEFT JOIN (SELECT count(*) `cnt`, `work_id` FROM `answers_yes` GROUP BY work_id) as ly  ON question.id = ly.work_id
                                                 LEFT JOIN (SELECT count(*) `cnt`, `work_id` FROM `answers_no` GROUP BY work_id) as ln  ON question.id = ln.work_id
@@ -365,13 +385,10 @@
         $conditions['search'] = htmlspecialchars($_GET['q'], ENT_NOQUOTES);
 
       $questions['data'] = $this->get_questions($conditions, ($catID > 0) ? self::$ORDER_BY_DATE : self::$ORDER_BY_LIKE, $fromQuestion, ($this->GET_ROWS_COUNT + 1));
-      if (count($questions['data']) != ($this->GET_ROWS_COUNT + 1))
+      $questions['isAllElement'] = true;
+      if (count($questions['data']) == ($this->GET_ROWS_COUNT + 1))
       {
         unset($questions['data'][$this->GET_ROWS_COUNT]);
-        $questions['isAllElement'] = true;
-      }
-      else
-      {
         $questions['isAllElement'] = false;
       }
 
