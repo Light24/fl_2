@@ -62,7 +62,7 @@
                 <? } ?>
 
                 <div class="search-bar">
-                   <form role="search" class="search-form" method="GET" action='/<?= $catsPrefix ?>/cats<? if (isset($uid) && $uid > 0) echo '/' . $uid ?>/<?= $cid ?>'>
+                   <form role="search" class="search-form" method="GET" action='/<?= $catsPrefix ?>/<?= $cid ?>'>
                         <div class="form-group">
                             <div class="loop"></div>
                             <input type="text" class="form-control" name="q" placeholder="">
