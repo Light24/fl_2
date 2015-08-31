@@ -19,9 +19,16 @@
       $orderBy = min(max(self::$ORDER_BY_DATE, $orderBy), self::$ORDER_BY_LIKE);
 
       $conditions = array();
-      $conditions['catID'] = $catID;
+      $conditions['userID']['value'] = $user['id'];
+      $conditions['userID']['sign']  = '<>';
+      $conditions['catID']['value'] = $catID;
+      $conditions['catID']['sign']  = '=';
       if (isset($_GET['q']))
-        $conditions['search'] = htmlspecialchars($_GET['q'], ENT_NOQUOTES);
+      {
+        $conditions['search']['value'] = htmlspecialchars($_GET['q'], ENT_NOQUOTES);
+        $conditions['search']['sign']  = "LIKE";
+      }
+
       $questions = self::get_questions($conditions, $orderBy, 0, ($this->GET_ROWS_COUNT + 1));
       Controller_Users::set_full_avatar_list_path($questions);
 
@@ -224,10 +231,17 @@
       $cid = intval($this->request->param('catID', 0));
 
       $conditions = array();
-      $conditions['userID'] = $uid;
-      $conditions['catID']  = $cid;
+      $conditions['userID']['value'] = $uid;
+      $conditions['userID']['sign']  = '=';
+
+      $conditions['catID']['value'] = $cid;
+      $conditions['catID']['sign']  = '=';
+
       if (isset($_GET['q']))
-        $conditions['search'] = htmlspecialchars($_GET['q'], ENT_NOQUOTES);
+      {
+        $conditions['search']['value'] = htmlspecialchars($_GET['q'], ENT_NOQUOTES);
+        $conditions['search']['sign']  = 'LIKE';
+      }
 
       $user_question = self::get_questions($conditions, Controller_Question::$ORDER_BY_LIKE, 0, ($this->GET_ROWS_COUNT + 1));
       $isAllElement = 1;
@@ -261,15 +275,15 @@
         if (isset($where))
           unset($where);
 
-        if (isset($conditions['catID']) && intval($conditions['catID']) > 0)
-          $where = (isset($where) ? $where . ' AND ' : '') . 'question.contest_id = ' . intval($conditions['catID']);
+        if (isset($conditions['catID']) && intval($conditions['catID']['value']) > 0)
+          $where = (isset($where) ? $where . ' AND ' : '') . 'question.contest_id ' . $conditions['catID']['sign'] . intval($conditions['catID']['value']);
 
         if (isset($conditions['userID']))
-          $where = (isset($where) ? $where . ' AND ' : '') . 'question.user_id = ' . intval($conditions['userID']);
+          $where = (isset($where) ? $where . ' AND ' : '') . 'question.user_id ' . $conditions['userID']['sign'] . intval($conditions['userID']['value']);
 
 
         if (isset($conditions['search']))
-          $where = (isset($where) ? $where . ' AND ' : '') . ' `text_q` LIKE \'%' . htmlspecialchars($conditions['search'], ENT_NOQUOTES) . '%\'';
+          $where = (isset($where) ? $where . ' AND ' : '') . ' `text_q` LIKE \'%' . htmlspecialchars($conditions['search']['value'], ENT_NOQUOTES) . '%\'';
 
         if (isset($where))
           $where = ' WHERE ' . $where;
@@ -308,19 +322,22 @@
       static public function get_answers($conditions, $order, $offsetRows , $countRows)
       {
         if (isset($where))
-          unset($where);
+         unset($where);
 
-        if (isset($conditions['catID']) && intval($conditions['catID']) > 0)
-          $where = (isset($where) ? $where . ' AND ' : '') . 'question.contest_id = ' . intval($conditions['catID']);
+        if (isset($where_answers))
+          unset($where_answers);
+
+        if (isset($conditions['catID']) && intval($conditions['catID']['value']) > 0)
+          $where = (isset($where) ? $where . ' AND ' : '') . 'question.contest_id = ' . intval($conditions['catID']['value']);
 
         if (isset($conditions['userID']))
         {
-          $where_answers = ' WHERE `user_id` = ' . $conditions['userID'];
-          $where         = (isset($where) ? $where . ' AND ' : '') . 'question.user_id <> ' . intval($conditions['userID']);
+          $where_answers = ' WHERE `user_id` = ' . intval($conditions['userID']['value']);
+          $where         = (isset($where) ? $where . ' AND ' : '') . 'question.user_id <> ' . intval($conditions['userID']['value']);
         }
 
         if (isset($conditions['search']))
-          $where = (isset($where) ? $where . ' AND ' : '') . ' `text_q` LIKE \'%' . htmlspecialchars($conditions['search'], ENT_NOQUOTES) . '%\'';
+          $where = (isset($where) ? $where . ' AND ' : '') . ' `text_q` LIKE \'%' . htmlspecialchars($conditions['search']['value'], ENT_NOQUOTES) . '%\'';
 
         $order_by = '';
         if (isset($order))
@@ -356,7 +373,6 @@
         $where = (isset($where) ? $where . ' AND ' : '') . " question.id IN (" . implode(',', $answerIDs) . ")";
         if (isset($where))
           $where = ' WHERE ' . $where;
-
 
         $answers = DB::query(Database::SELECT, "SELECT question.*,question.id as
                                                 uidQuest, category.*,users.*, users.fio as `user`,
@@ -439,9 +455,14 @@
       $fromQuestion = intval($_POST['fromQuestion']);
 
       $conditions = array();
-      $conditions['catID'] = $catID;
+      $conditions['catID']['value'] = $catID;
+      $conditions['catID']['sign']  = '=';
+
       if (isset($_GET['q']))
-        $conditions['search'] = htmlspecialchars($_GET['q'], ENT_NOQUOTES);
+      {
+        $conditions['search']['value'] = htmlspecialchars($_GET['q'], ENT_NOQUOTES);
+        $conditions['search']['sign']  = '=';
+      }
 
       $questions['data'] = self::get_questions($conditions, ($catID > 0) ? self::$ORDER_BY_DATE : self::$ORDER_BY_LIKE, $fromQuestion, ($this->GET_ROWS_COUNT + 1));
       $questions['isAllElement'] = true;
