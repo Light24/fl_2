@@ -102,6 +102,9 @@
       $uid = $this->request->param('userID');
       $uid = ($uid !== NULL) ? intval($uid) : $uid;
 
+      $cid = $this->request->param('catID');
+      $cid = ($cid !== NULL) ? intval($cid) : $cid;
+
       $user = Session::instance()->get('user');
       $linkPrefix = self::get_prefix_cats($uid, $user !== NULL ? $user['id'] : 0);
 
@@ -110,6 +113,7 @@
       $categories = DB::query(Database::SELECT, "SELECT * FROM `category`")->execute();
 
       $content = View::factory('default/side_right', array(
+                      'cid'        => $cid,
                       'categories' => $categories,
                       'linkPrefix' => $linkPrefix,
                       ));

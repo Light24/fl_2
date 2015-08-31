@@ -39,7 +39,7 @@ else
             <div class="right-av-block">
 
                <p style="margin-top: -50px;
-  position: absolute;" class="name"><?= $user['fio'] ?><a  class="linkcab" href="http://<?= $_SERVER['HTTP_HOST'] ?>/user?id=<?= $user['id'] ?>">@id<?= $user['id'] ?>  </a></p>
+  position: absolute;" class="name"><?= $user['fio'] ?><a  class="linkcab" href="http://<?= $_SERVER['HTTP_HOST'] ?>/user/<?= $user['id'] ?>">@id<?= $user['id'] ?>  </a></p>
               <!--  <p style="line-height:25px;">Количество баллов: <?//= $user['points'] ?> </p>-->
                 <div style="  width: 180px;
   height: 150px;
