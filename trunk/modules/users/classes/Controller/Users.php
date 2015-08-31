@@ -50,12 +50,8 @@ class Controller_Users extends Controller
                 'user'              => Session::instance()->get('user'),)));
   }
 
-
-  public function action_leaders()
+  private function get_leaders_by_select_cats($sort_category, $durations_cats)
   {
-    $sort_category = htmlspecialchars(Arr::get($_GET, 'sort_category'), ENT_NOQUOTES);
-    $durations     = htmlspecialchars(Arr::get($_GET, 'durations'), ENT_NOQUOTES);
-
     switch ($sort_category)
     {
       case 'questions':
@@ -68,18 +64,20 @@ class Controller_Users extends Controller
       }
       case 'answers':
       {
-        $users = DB::query(Database::SELECT, "SELECT user.id,user.photo, user.fio,user.login, 
-                                               count(question.id) as qnt FROM `users` user 
-                                               LEFT JOIN `question` question ON user.id=question.user_id group by user.id
-                                               ORDER BY id DESC LIMIT 6")->execute()->as_array();
+        $users = DB::query(Database::SELECT, 'SELECT user.id,user.photo, user.fio,user.login, 
+                                              (count(answers_yes.work_id) + count(answers_no.work_id)) as qnt FROM `users` user 
+                                              LEFT JOIN `question` question ON user.id=question.user_id
+                                              LEFT JOIN `answers_no` answers_no ON answers_no.work_id=question.id
+                                              LEFT JOIN `answers_yes` answers_yes ON answers_yes.work_id=question.id
+                                              group by user.id ORDER BY qnt DESC LIMIT 6')->execute()->as_array();
         break;
       }
       case 'points':
       default:
       {
         $where = '';
-        if (strcmp($durations, 'day') === 0)
-          $where = ' WHERE question.date_post >= (NOW() - TIME_TO_SEC(\'24:00:00\')) ';
+        if (strcmp($durations_cats, 'week') === 0)
+          $where = ' WHERE question.date_post >= (NOW() - TIME_TO_SEC(\'24:00:00\') * 7) ';
 
         $users = DB::query(Database::SELECT, 'SELECT user.id,user.photo, user.fio,user.login, 
                                                user.points as qnt FROM `users` user 
@@ -89,12 +87,22 @@ class Controller_Users extends Controller
       }
     }
     self::set_full_avatar_list_path($users);
+    return $users;
+  }
 
+
+  public function action_leaders()
+  {
+    $select_category = htmlspecialchars(Arr::get($_GET, 'select_category'), ENT_NOQUOTES);
+    $durations_cats  = htmlspecialchars(Arr::get($_GET, 'durations'), ENT_NOQUOTES);
+
+
+    $users = $this->get_leaders_by_select_cats($select_category, $durations_cats);
 
     //$this->template->pageTitle = 'Лидеры';
     $this->response->body(View::factory('default/leaders', array(
-                'users' => $users,
-                'sort_category' => $sort_category,
+                'users'           => $users,
+                'select_category' => $select_category,
     )));
   }
 

@@ -1,3 +1,16 @@
+<style>
+.nav-tabs
+{
+  display: inline-block !important;
+}
+
+.nav-tabs > li > a
+{
+  font-size: 12px !important;
+}
+</style>
+
+
 <div class="right-element">
     <div class="center-block">
         <p class="head-center-block">Лидеры проекта:</p>
@@ -5,22 +18,20 @@
             <div class="leader-result">
                 <p class="period-p">Период:</p>
                 <ul class="result-ul">
-                    <li><a href = '/user/leaders?sort_category=<?= $sort_category ?>&durations=day'>за сутки</a>
+                    <li><a href = '/user/leaders?select_category=<?= $select_category ?>&durations=week'>за неделю</a>
                     </li>
-                    <li><a href = '/user/leaders?sort_category=<?= $sort_category ?>&durations=all'>за все время</a>
+                    <li><a href = '/user/leaders?select_category=<?= $select_category ?>&durations=all'>за все время</a>
                     </li>
                 </ul>
             </div>
             <div class="leader-result nomination">
-                <p class="period-p">Лидеры по:</p>
-                <ul class="result-ul">
-                    <? $sort_category; ?>
-
-                    <li><a <? if ($sort_category != '' && $sort_category != 'points') { ?> style="border-bottom: none;text-decoration: none" <? } ?> href="/user/leaders?sort_category=points">набранным баллам</a>
+                <p class="period-p" style = "margin-top: 10px;">Лидеры по:</p>
+                <ul class="nav nav-tabs">
+                    <li class = "<? if ($select_category == '' || strcmp($select_category , 'points') == 0)  echo "active"; ?>"><a href="/user/leaders?select_category=points">набранным баллам</a>
                     </li>
-                    <li><a <? if ($sort_category != 'answers') { ?> style="border-bottom: none; text-decoration: none" <? } ?> href="/user/leaders?sort_category=answers">количесту ответов</a>
+                    <li class = "<? if (strcmp($select_category , 'answers') == 0)  echo "active"; ?>"><a href="/user/leaders?select_category=answers">количесту ответов</a>
                     </li>
-                    <li><a <? if ($sort_category != 'questions') { ?> style="border-bottom: none; text-decoration: none" <? } ?> href="/user/leaders?sort_category=questions">количеству вопросов</a>
+                    <li class = "<? if (strcmp($select_category , 'questions') == 0)  echo "active"; ?>"><a href="/user/leaders?select_category=questions">количеству вопросов</a>
                     </li>
                 </ul>
             </div>
@@ -41,6 +52,7 @@
                                         </div>
 
                                         <div style="padding-left: 0; font-size: 15px;" class="numbers-leader">
+                                            <?= $itemA['qnt'] ?>
                                             <?
                                             $level = 'Новичок';
                                             if ($itemA['qnt'] <= 249) {
@@ -60,10 +72,8 @@
                                             } else {
                                                 $level = 'Просветленный';
                                             }
-                                            ?>
-                                            <?= $itemA['qnt'] ?>
-                                            <?
-                                            if ($sort_category == '' || $sort_category == 'points')
+
+                                            if ($select_category == '' || $select_category == 'points')
                                               echo ' - ' . $level;
                                             ?>
                                         </div>
