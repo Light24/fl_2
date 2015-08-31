@@ -18,20 +18,20 @@
             <div class="leader-result">
                 <p class="period-p">Период:</p>
                 <ul class="result-ul">
-                    <li><a href = '/user/leaders?select_category=<?= $select_category ?>&durations=week'>за неделю</a>
+                    <li><a href = '/user/leaders/<?= $select_category ?>/week/<?= $cid ?>'>за неделю</a>
                     </li>
-                    <li><a href = '/user/leaders?select_category=<?= $select_category ?>&durations=all'>за все время</a>
+                    <li><a href = '/user/leaders/<?= $select_category ?>/all/<?= $cid ?>'>за все время</a>
                     </li>
                 </ul>
             </div>
             <div class="leader-result nomination">
                 <p class="period-p" style = "margin-top: 10px;">Лидеры по:</p>
                 <ul class="nav nav-tabs">
-                    <li class = "<? if ($select_category == '' || strcmp($select_category , 'points') == 0)  echo "active"; ?>"><a href="/user/leaders?select_category=points">набранным баллам</a>
+                    <li class = "<? if ($select_category == '' || strcmp($select_category , 'points') == 0)  echo "active"; ?>"><a href="/user/leaders/points/<?= $duration_type ?>/<?= $cid ?>">набранным баллам</a>
                     </li>
-                    <li class = "<? if (strcmp($select_category , 'answers') == 0)  echo "active"; ?>"><a href="/user/leaders?select_category=answers">количесту ответов</a>
+                    <li class = "<? if (strcmp($select_category , 'answers') == 0)  echo "active"; ?>"><a href="/user/leaders/answers/<?= $duration_type ?>/<?= $cid ?>">количесту ответов</a>
                     </li>
-                    <li class = "<? if (strcmp($select_category , 'questions') == 0)  echo "active"; ?>"><a href="/user/leaders?select_category=questions">количеству вопросов</a>
+                    <li class = "<? if (strcmp($select_category , 'questions') == 0)  echo "active"; ?>"><a href="/user/leaders/questions/<?= $duration_type ?>/<?= $cid ?>">количеству вопросов</a>
                     </li>
                 </ul>
             </div>

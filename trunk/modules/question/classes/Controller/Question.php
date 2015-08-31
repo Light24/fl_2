@@ -76,7 +76,15 @@
 
     static public function get_prefix_cats($uid, $uidProfile)
     {
-      if (strpos($_SERVER['REQUEST_URI'], 'user') !== FALSE)
+      if (strpos($_SERVER['REQUEST_URI'], 'leaders') !== FALSE)
+      {
+        $sort_type     = htmlspecialchars(Request::initial()->param('sort_type', 'points'), ENT_NOQUOTES);
+        $duration_type = htmlspecialchars(Request::initial()->param('duration_type', 'all'), ENT_NOQUOTES);
+
+        $linkPrefix = 'user' . '/' . 'leaders' . '/';
+        $linkPrefix .= $sort_type . '/' . $duration_type;
+      }
+      else if (strpos($_SERVER['REQUEST_URI'], 'user') !== FALSE)
       {
         $linkPrefix = 'user' . '/' . 'question' . '/' . 'cats' . '/';
         $linkPrefix .= ($uid > 0) ? $uid : $uidProfile;
