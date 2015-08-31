@@ -6,7 +6,7 @@
     )
   );
 
-  Route::set('UserGetCats', 'user_question/get_cats(/<userID>)', array('userID' => '[0-9]+'))
+  Route::set('UserGetCats', 'user_question/get_cats(/<catID>(/<userID>))', array('catID' => '[0-9]+'), array('userID' => '[0-9]+'))
     ->defaults(array(
         'controller' => 'question',         //cabinet.loyalty.name
         'action' => 'get_cats',
