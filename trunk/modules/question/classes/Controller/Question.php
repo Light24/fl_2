@@ -67,23 +67,24 @@
                     'questionP' => $questions, 'usersA' => $usersA)));
     }
 
-    static public function get_prefix_cats()
+    static public function get_prefix_cats($uid, $uidProfile)
     {
       if (strpos($_SERVER['REQUEST_URI'], 'user') !== FALSE)
       {
-        $linkPrefix = 'user' . '/' . 'question';
+        $linkPrefix = 'user' . '/' . 'question' . '/' . 'cats' . '/';
+        $linkPrefix .= ($uid > 0) ? $uid : $uidProfile;
       }
       else if (strpos($_SERVER['REQUEST_URI'], 'cabinet') !== FALSE)
       {
-        $linkPrefix = 'cabinet' . '/' . 'question';
+        $linkPrefix = 'cabinet' . '/' . 'question' . '/' . 'cats';
       }
       else if (strpos($_SERVER['REQUEST_URI'], 'search') !== FALSE)
       {
-        $linkPrefix = 'search' . '/' . 'question';
+        $linkPrefix = 'search' . '/' . 'question' . '/' . 'cats';
       }
       else
       {
-        $linkPrefix = 'question';
+        $linkPrefix = 'question' . '/' . 'cats';
       }
       return $linkPrefix;
     }
@@ -94,7 +95,8 @@
       $uid = $this->request->param('userID');
       $uid = ($uid !== NULL) ? intval($uid) : $uid;
 
-      $linkPrefix = self::get_prefix_cats();
+      $user = Session::instance()->get('user');
+      $linkPrefix = self::get_prefix_cats($uid, $user !== NULL ? $user['id'] : 0);
 
 
       //список категорий
