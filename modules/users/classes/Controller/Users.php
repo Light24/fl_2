@@ -36,19 +36,18 @@ class Controller_Users extends Controller
 
     if (count($queryResult) == 1)
     {
-        $user_question = Controller_Question::get_questions(array('userID' => $userID), Controller_Question::$ORDER_BY_LIKE, 0, 10);
+        $profile = Controller_Question::get_questions(array('userID' => $userID), Controller_Question::$ORDER_BY_LIKE, 0, 10);
+        $profile = $profile[0];
     }
     else
     {
-        HTTP::redirect("/404"); die();
+        header( 'Location: ' . URL::base() . '' ) ; die();
     }
 
     //print_r(Auth::instance()->get_user());
     //$this->template->pageTitle = 'Результат поиска';
     $this->response->body(View::factory('default/user', array(
-                'profileID'         => $userID,
-                'profile'           => $queryResult[0],
-                'profile_questions' => $user_question,
+                'profile'           => $profile,
                 'user'              => Session::instance()->get('user'),)));
   }
 

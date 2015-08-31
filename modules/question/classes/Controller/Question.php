@@ -22,7 +22,7 @@
       $conditions['catID'] = $catID;
       if (isset($_GET['q']))
         $conditions['search'] = htmlspecialchars($_GET['q'], ENT_NOQUOTES);
-      $questions = $this->get_questions($conditions, $orderBy, 0, ($this->GET_ROWS_COUNT + 1));
+      $questions = self::get_questions($conditions, $orderBy, 0, ($this->GET_ROWS_COUNT + 1));
       Controller_Users::set_full_avatar_list_path($questions);
 
       $isAllElement = 1;
@@ -49,7 +49,7 @@
         $user = Session::instance()->get('user');
 
         //популярные
-        $questions = $this->get_questions(array(), self::$ORDER_BY_LIKE, 0, $this->GET_ROWS_BEST_COUNT);
+        $questions = self::get_questions(array(), self::$ORDER_BY_LIKE, 0, $this->GET_ROWS_BEST_COUNT);
         Controller_Users::set_full_avatar_list_path($questions);
 
         //активные участники
@@ -218,6 +218,8 @@
 
     public function action_get_user_questions()
     {
+      $user = Session::instance()->get('user');
+
       $uid = intval($this->request->param('userID', 0));
       $cid = intval($this->request->param('catID', 0));
 
@@ -234,8 +236,9 @@
         unset($user_question['data'][$this->GET_ROWS_COUNT]);
         $isAllElement = 0;
       }
+      $user_answer = self::get_answers($conditions, Controller_Question::$ORDER_BY_LIKE, 0, 10);
 
-      $user_answer   = self::get_answers($conditions, Controller_Question::$ORDER_BY_LIKE, 0, 10);
+      $user_answer_compare = $user !== NULL ? $this->get_answers_compare($uid, $user['id']) : NULL;
 
       Controller_Users::set_full_avatar_list_path($user_question);
       //print_r(Auth::instance()->get_user());
@@ -243,11 +246,12 @@
 
       $this->response->body(View::factory('default/user_questions', array(
                   'answers'           => $user_answer,
+                  'answers_compare'   => $user_answer_compare,
                   'uid'               => $uid,
                   'catID'             => $cid,
                   'questions'         => $user_question,
                   'isAllElement'      => $isAllElement,
-                  'user'              => Session::instance()->get('user'))));
+                  'user'              => $user)));
     }
 
 
@@ -371,6 +375,60 @@
     }
 
 
+    // Функция рассчитывает сходство ответов двух пользователей, учитываются только те вопросы, на которые ответили оба пользователя итоговая формула: $answer_indent / ($answer_indent + $answer_diff) * 100
+    public function get_answers_compare($uid_f, $uid_s)
+    {
+      $uid_f = intval($uid_f);
+      $uid_s = intval($uid_s);
+
+      $answers_n = DB::query(Database::SELECT, 'SELECT `work_id`, `user_id` FROM answers_no WHERE `user_id` = ' . $uid_f . ' OR `user_id` = ' . $uid_s . ' ORDER BY work_id ASC')->execute()->as_array();
+      $answers_y = DB::query(Database::SELECT, 'SELECT `work_id`, `user_id` FROM answers_yes WHERE `user_id` = ' . $uid_f . ' OR `user_id` = ' . $uid_s . ' ORDER BY work_id ASC')->execute()->as_array();
+
+      $answer_indent = 0;
+      $answer_diff = 0;
+      for ($answerIndex = 0; $answerIndex != count($answers_y); )
+      {
+        if ($answerIndex != (count($answers_y) - 1) && $answers_y[$answerIndex]['work_id'] == $answers_y[$answerIndex + 1]['work_id'])
+        {
+          ++$answer_indent;
+          $answerIndex += 2;
+        }
+        else
+        {
+          //++$answer_diff;
+          $answerIndex += 1;
+        }
+      }
+
+      for ($answerIndex = 0; $answerIndex != count($answers_n); )
+      {
+        if ($answerIndex != (count($answers_n) - 1) && $answers_n[$answerIndex]['work_id'] == $answers_n[$answerIndex + 1]['work_id'])
+        {
+          ++$answer_indent;
+          $answerIndex += 2;
+        }
+        else
+        {
+          if ($answers_n[$answerIndex]['user_id'] == $uid_f)
+          {
+            foreach ($answers_y AS $answer)
+            {
+              if ($answer['user_id'] == $uid_s && $answer['user_id'] == $answers_n[$answerIndex]['user_id'])
+              {
+                ++$answer_diff;
+                break;
+              }
+            }
+          }
+          //++$answer_diff;
+          $answerIndex += 1;
+        }
+      }
+      if ($answer_indent + $answer_diff == 0)
+        return 0;
+      return $answer_indent / ($answer_indent + $answer_diff) * 100;
+    }
+
 /********************************************************** AJAX ЗАПРОСЫ **********************************************************/
     public function action_get_questions_ajax()
     {
@@ -385,7 +443,7 @@
       if (isset($_GET['q']))
         $conditions['search'] = htmlspecialchars($_GET['q'], ENT_NOQUOTES);
 
-      $questions['data'] = $this->get_questions($conditions, ($catID > 0) ? self::$ORDER_BY_DATE : self::$ORDER_BY_LIKE, $fromQuestion, ($this->GET_ROWS_COUNT + 1));
+      $questions['data'] = self::get_questions($conditions, ($catID > 0) ? self::$ORDER_BY_DATE : self::$ORDER_BY_LIKE, $fromQuestion, ($this->GET_ROWS_COUNT + 1));
       $questions['isAllElement'] = true;
       if (count($questions['data']) == ($this->GET_ROWS_COUNT + 1))
       {
