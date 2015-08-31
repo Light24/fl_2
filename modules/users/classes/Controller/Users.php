@@ -219,7 +219,6 @@ class Controller_Users extends Controller
         header( 'Location: ' . URL::base() . '' ) ; die();
       }
     }
-
     $this->updateSession($queryResult[0]);
     header( 'Location: ' . URL::base() . '' ) ; die();
   }
@@ -445,32 +444,10 @@ class Controller_Users extends Controller
         '/assets/' . $this->tpl . '/js/jquery.tooltip.js',
     );*/
     $user = Session::instance()->get('user');
-    
-    //$questions = new Controller_Question();
-    //$questions->get_questions(array());
-
-
-/*        $best = Arr::get($_GET, 'best');
-    if ($best == 1) {
-        $best = " ORDER BY likey";
-    } else {
-        $best = " ORDER BY question.date_post";
-    }
-    $plusSearch = '';
-    if (Arr::get($_GET, 'id') != '') {
-        $plusSearch = ' AND `contest_id`=' . Arr::get($_GET, 'id') . ' ';
-    }*/
-
-    $user_question = Controller_Question::get_questions(array('userID' => $user['id']), Controller_Question::$ORDER_BY_LIKE, 0, 10);
-
-/*        foreach ($user_question_yes as $it) {
-        echo $it['text_q'];
-    }*/
     self::set_full_avatar_path($user);
 
     $this->response->body(View::factory('default/cabinet', array(
-                'user'          => $user,
-                'user_question' => $user_question,
+                'user'          => $user
     )));
   }
 
