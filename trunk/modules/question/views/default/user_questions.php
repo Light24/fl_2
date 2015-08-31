@@ -40,7 +40,7 @@
                   </a>
 
                   <div class="right-block-q">
-                      <p style="text-align:center; margin-top:25px;" class="login-name">Сходство ответов: <?/*= $countAsk * 100*/ ?>%</p> 
+                      <p style="text-align:center; margin-top:25px;" class="login-name">Сходство ответов: <?= $answers_compare ?>%</p> 
                   </div>
               </div>
           </div>
