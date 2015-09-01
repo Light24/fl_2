@@ -1,0 +1,30 @@
+<style>
+  .breadcrumbs
+  {
+    margin-top: 8px;
+    margin-bottom: 15px;
+  }
+
+  .static_page .header
+  {
+    font-size: 25px;
+    font-weight: 500;
+  }
+
+  .bold
+  {
+    font-weight: 500;
+  }
+
+  .static_page li
+  {
+    margin-top: 6px;
+    margin-bottom: 6px;
+  }
+
+  .anchor
+  {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+</style>
