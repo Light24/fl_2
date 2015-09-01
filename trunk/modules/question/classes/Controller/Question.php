@@ -386,7 +386,7 @@
       foreach ($tempAnsw as $aswid)
         array_push($answerIDs, $aswid['work_id']);
 
-      $answers = NULL;
+      $answers = array();
       if (count($answerIDs) > 0)
       {
         $where = (isset($where) ? $where . ' AND ' : '') . " question.id IN (" . implode(',', $answerIDs) . ")";
