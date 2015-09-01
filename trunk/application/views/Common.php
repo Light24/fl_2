@@ -48,7 +48,12 @@
             ?>
 
     <body class="<?= $bodyClass ?>">
-        <?php echo $header . $side_left . $content . $side_right . $footer; ?>       
-
+        <?= $header ?>
+        <?= $side_left ?>
+        <div class = "right-element">
+          <?= $content ?>
+        </div>
+        <?= $side_right ?>
+        <?= $footer ?>
     </body>
 </html>

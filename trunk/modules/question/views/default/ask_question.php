@@ -1,4 +1,4 @@
-<div class="right-element">
+
     <div class="center-block">
         <p class="head-center-block">Создание вопроса:</p>
         <div class="ask-q">
@@ -38,7 +38,7 @@
 
         </div>
     </div>
-</div>
+
     <script>
     $(document).ready(function() {
 
