@@ -711,9 +711,9 @@ button:focus {
 button:hover {
 padding:inherit;
 }
-.center-block > #load-questions-ajax:hover,
-.center-block > #load-questions-ajax:active,
-.center-block > #load-questions-ajax:focus,
+.center-block > .get-questions-ajax:hover,
+.center-block > .get-questions-ajax:active,
+.center-block > .get-questions-ajax:focus,
 .button-rait >.no-btn:hover,
 .button-rait >.yes-btn:hover,
 .button-rait > .no-btn:active,
@@ -747,7 +747,7 @@ padding:inherit;
     padding:0px;
       vertical-align: middle;
 }
-#load-questions-ajax {
+.get-questions-ajax {
     width: 100%;
     height: 35px;
     outline: none;
