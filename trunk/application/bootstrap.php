@@ -248,7 +248,7 @@ Route::set('user_logout', 'user/profile/logout')
 
 
 // Статические страницы
-Route::set('manager_static_page', '(<page>)',  array('page' => '[a-zA-Z0-9]+'))
+Route::set('manager_static_page', '<page>(/<print>)',  array('page' => '[a-zA-Z0-9]+'), array('print' => 'print'))
     ->defaults(array(
         'controller' => 'manager',
         'action' => 'show_static_page',
