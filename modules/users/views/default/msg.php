@@ -20,7 +20,6 @@ if ($user['points'] <= 249) {
 }
 ?>
 
-<div class="right-element">   
     <div style="position:relative" class="center-block">
         <p class="pers-cab-h">&nbsp;</p>
         <div class="perconal-cab">
@@ -128,7 +127,3 @@ if ($user['points'] <= 249) {
             </div>
         </div>
     </div>
-</div>
-
-
-

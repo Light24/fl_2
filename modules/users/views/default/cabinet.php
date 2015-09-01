@@ -27,7 +27,6 @@ else
   $level = 'Просветленный';
 ?>
 
-<div class="right-element">
     <div style="position:relative" class="center-block">
         <p class="pers-cab-h">&nbsp;</p>
 
@@ -89,4 +88,3 @@ else
             </div>
         </div>
     </div>
-</div>

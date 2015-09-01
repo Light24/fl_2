@@ -96,7 +96,6 @@ if (Arr::get($user, 'id') != '')
 
 
 
-<div class="right-element">
     <div style="position:relative" class="center-block">
 
         <div class="perconal-cab">
@@ -183,7 +182,6 @@ if (Arr::get($user, 'id') != '')
 
 
     </div>
-</div>
 
 
 

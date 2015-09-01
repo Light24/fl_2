@@ -1,4 +1,3 @@
-<div class="right-element">
   <div class="center-block">
     <p class="add-photo-head">Изменить профиль.</p>
 
@@ -115,7 +114,6 @@
     </form>
     <a style="line-height: 2" href="#" class="btn btn-reg" id="submitEdit">Изменить</a>
   </div>
-</div>
 
 <!-- Вадация формы -->
 <script>

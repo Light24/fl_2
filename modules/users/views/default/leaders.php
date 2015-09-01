@@ -11,7 +11,6 @@
 </style>
 
 
-<div class="right-element">
     <div class="center-block">
         <p class="head-center-block">Лидеры проекта:</p>
         <div class="result-block">
@@ -95,4 +94,3 @@
 
         </div>
     </div>
-</div>

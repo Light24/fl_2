@@ -1,4 +1,3 @@
-                <div class="right-element">
                     <div class="center-block">
                         <p class="add-photo-head">Добро пожаловать!</p>
 
@@ -135,7 +134,6 @@
                             </ul>
                         </div>
                     </div>
-</div>
 
 <script>
   /*Рег-ция*/

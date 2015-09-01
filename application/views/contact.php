@@ -1,6 +1,5 @@
 <?= HTML::style('/assets/default/css/static_pages.css') ?>
 
-<div class = "right-element">
 <div class = "breadcrumbs">
   <a href = "/"> Главная </a>
   Контакты 
@@ -30,5 +29,4 @@
   <font class = "bold"> Служба поддержки: </font>
   <br>
   <a href = ""> Email </a>
-</div>
 </div>

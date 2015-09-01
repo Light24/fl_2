@@ -1,7 +1,6 @@
 <?= HTML::script('/assets/default/js/ajax_load.js');?>
 <?= HTML::script('/assets/default/js/jquery.tooltip.js');?>
 
-<div class="right-element">
     <div class="center-block">
         <div class="add-photo-block">
             <?
@@ -120,7 +119,6 @@
 
 
     </div>
-</div>
 
     <script>
       $(document).ready(function()
