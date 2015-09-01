@@ -3,10 +3,10 @@
 <div class="tabs-block">
     <ul class="nav nav-tabs">
         <li class="active">
-          <a href="#quest" data-toggle="tab" class="active">Вопросы <span><?= count($questions) ?></span></a>
+          <a href="#quest" data-toggle="tab" class="active">Вопросы <span><?= $questions_total ?></span></a>
         </li>
         <li>
-          <a id="myansw" href="#answer" data-toggle="tab">Ответы <span></span></a>
+          <a id="myansw" href="#answer" data-toggle="tab">Ответы <span><?= $answers_total ?></span></a>
         </li>
         <? if ($user !== NULL && $user['id'] != $uid)
         {
@@ -50,9 +50,3 @@
     </div>
 </div>
 </div>
-
-<script>
-        $(document).ready(function() {
-            $("#myansw span").text(<?= count($answers) ?>)
-        })
-</script>

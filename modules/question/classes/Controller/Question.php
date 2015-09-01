@@ -29,15 +29,9 @@
         $conditions['search']['sign']  = "LIKE";
       }
 
-      $questions = self::get_questions($conditions, $orderBy, 0, ($this->GET_ROWS_COUNT + 1));
+      $questions_total = 0;
+      $questions = self::get_questions($conditions, $orderBy, 0, $this->GET_ROWS_COUNT, $questions_total);
       Controller_Users::set_full_avatar_list_path($questions);
-
-      $isAllElement = 1;
-      if (count($questions) == ($this->GET_ROWS_COUNT + 1))
-      {
-        unset($questions['data'][$this->GET_ROWS_COUNT]);
-        $isAllElement = 0;
-      }
 
 
       /*$this->template->pageTitle = 'Главная страница';
@@ -45,9 +39,10 @@
 
       $this->response->body(View::factory('default/all', array(
                   'user'              => $user,
+                  'uid'               => NULL,
                   'catID'             => $catID,
                   'questions'         => $questions,
-                  'isAllElement'      => $isAllElement)));
+                  'questions_total'   => $questions_total)));
     }
 
 
@@ -255,18 +250,15 @@
         $conditions['search']['sign']  = 'LIKE';
       }
 
-      $user_question = self::get_questions($conditions, Controller_Question::$ORDER_BY_LIKE, 0, ($this->GET_ROWS_COUNT + 1));
-      $isAllElement = 1;
-      if (count($user_question) == ($this->GET_ROWS_COUNT + 1))
-      {
-        unset($user_question['data'][$this->GET_ROWS_COUNT]);
-        $isAllElement = 0;
-      }
-      $user_answer = self::get_answers($conditions, Controller_Question::$ORDER_BY_LIKE, 0, 10);
+      $questions_total = 0;
+      $answers_total   = 0;
+      $user_question = self::get_questions($conditions, Controller_Question::$ORDER_BY_LIKE, 0, $this->GET_ROWS_COUNT, $questions_total );
+      $user_answer   = self::get_answers($conditions, Controller_Question::$ORDER_BY_LIKE, 0, $this->GET_ROWS_COUNT, $answers_total);
 
-      $user_answer_compare = $user !== NULL ? $this->get_answers_compare($uid, $user['id']) : NULL;
+      $user_answer_compare = ($user !== NULL) ? $this->get_answers_compare($uid, $user['id']) : NULL;
 
       Controller_Users::set_full_avatar_list_path($user_question);
+      Controller_Users::set_full_avatar_list_path($user_answer);
       //print_r(Auth::instance()->get_user());
       //$this->template->pageTitle = 'Результат поиска';
 
@@ -276,13 +268,14 @@
                   'uid'               => $uid,
                   'catID'             => $cid,
                   'questions'         => $user_question,
-                  'isAllElement'      => $isAllElement,
+                  'questions_total'   => $questions_total,
+                  'answers_total'     => $answers_total,
                   'user'              => $user)));
     }
 
 
   /********************************************************** Служебные фнукции **********************************************************/
-      static public function get_questions($conditions, $order, $offsetRows , $countRows)
+      static public function get_questions($conditions, $order, $offsetRows , $countRows, &$questions_total = NULL)
       {
         if (isset($where))
           unset($where);
@@ -327,11 +320,26 @@
             LEFT JOIN (SELECT count(*) `cnt`, `work_id` FROM `answers` GROUP BY work_id) as l  
             ON question.id = l.work_id" . (isset($where) ? $where : '') . $order_by . $limit)->execute()->as_array();
 
+        // TODO добавить в таблицу users стобец questions_total
+        if ($questions_total !== NULL)
+        {
+          $query = DB::query(Database::SELECT, "SELECT question.*,question.id as uidQuest, category.*,users.*, users.fio as `user`,
+              `l`.`cnt` as `likes`, `ly`.`cnt` as `likey`, `ln`.`cnt` as `liken`, photos_q.*
+              FROM `question`
+              LEFT JOIN `users` ON question.user_id = users.id
+              LEFT JOIN `category` ON question.contest_id = category.id
+              LEFT JOIN `photos_q` ON question.id = photos_q.question_id
+              LEFT JOIN (SELECT count(*) `cnt`, `work_id` FROM `answers_yes` GROUP BY work_id) as ly  ON question.id = ly.work_id
+              LEFT JOIN (SELECT count(*) `cnt`, `work_id` FROM `answers_no` GROUP BY work_id) as ln  ON question.id = ln.work_id
+              LEFT JOIN (SELECT count(*) `cnt`, `work_id` FROM `answers` GROUP BY work_id) as l  
+              ON question.id = l.work_id" . (isset($where) ? $where : '') . $order_by)->execute()->as_array();
+          $questions_total = count($query);
+        }
         return $questions;
     }
 
 
-      static public function get_answers($conditions, $order, $offsetRows , $countRows)
+      static public function get_answers($conditions, $order, $offsetRows , $countRows, &$answers_total = NULL)
       {
         if (isset($where))
          unset($where);
@@ -378,7 +386,6 @@
       foreach ($tempAnsw as $aswid)
         array_push($answerIDs, $aswid['work_id']);
 
-      
       $answers = NULL;
       if (count($answerIDs) > 0)
       {
@@ -397,7 +404,25 @@
                                                 LEFT JOIN (SELECT count(*) `cnt`, `work_id` FROM `answers_yes` GROUP BY work_id) as ly  ON question.id = ly.work_id
                                                 LEFT JOIN (SELECT count(*) `cnt`, `work_id` FROM `answers_no` GROUP BY work_id) as ln  ON question.id = ln.work_id
                                                 LEFT JOIN (SELECT count(*) `cnt`, `work_id` FROM `answers` GROUP BY work_id) as l
+                                                ON question.id = l.work_id " . $where . $limit)->execute()->as_array();
+      // TODO добавить в таблицу users стобец questions_total
+
+        if ($answers_total !== NULL)
+        {
+          $query = DB::query(Database::SELECT, "SELECT question.*,question.id as
+                                                uidQuest, category.*,users.*, users.fio as `user`,
+                                                `l`.`cnt` as `likes`, `ly`.`cnt` as `likey`, `ln`.`cnt` as `liken`, photos_q.*
+                                                FROM `question`
+                                                LEFT JOIN `users` ON question.user_id = users.id
+                                                LEFT JOIN `category` ON question.contest_id = category.id
+                                                LEFT JOIN `photos_q` ON question.id = photos_q.question_id
+
+                                                LEFT JOIN (SELECT count(*) `cnt`, `work_id` FROM `answers_yes` GROUP BY work_id) as ly  ON question.id = ly.work_id
+                                                LEFT JOIN (SELECT count(*) `cnt`, `work_id` FROM `answers_no` GROUP BY work_id) as ln  ON question.id = ln.work_id
+                                                LEFT JOIN (SELECT count(*) `cnt`, `work_id` FROM `answers` GROUP BY work_id) as l
                                                 ON question.id = l.work_id " . $where)->execute()->as_array();
+          $answers_total = count($query);
+        }
       }
       return $answers;
     }
@@ -463,10 +488,14 @@
       if (!Request::initial()->is_ajax())
         exit(0);
 
+      $uid          = intval($_POST['uid']);
       $catID        = intval($_POST['catID']);
       $fromQuestion = intval($_POST['fromQuestion']);
 
       $conditions = array();
+      $conditions['userID']['value'] = $uid;
+      $conditions['userID']['sign']  = '=';
+
       $conditions['catID']['value'] = $catID;
       $conditions['catID']['sign']  = '=';
 
@@ -476,14 +505,37 @@
         $conditions['search']['sign']  = '=';
       }
 
-      $questions['data'] = self::get_questions($conditions, ($catID > 0) ? self::$ORDER_BY_DATE : self::$ORDER_BY_LIKE, $fromQuestion, ($this->GET_ROWS_COUNT + 1));
-      $questions['isAllElement'] = true;
-      if (count($questions['data']) == ($this->GET_ROWS_COUNT + 1))
+      $questions['data'] = self::get_questions($conditions, ($catID > 0) ? self::$ORDER_BY_DATE : self::$ORDER_BY_LIKE, $fromQuestion, $this->GET_ROWS_COUNT);
+      Controller_Users::set_full_avatar_list_path($questions['data']);
+
+      echo json_encode($questions);
+    }
+
+
+    public function action_get_answers_ajax()
+    {
+      if (!Request::initial()->is_ajax())
+        exit(0);
+
+      $uid          = intval($_POST['uid']);
+      $catID        = intval($_POST['catID']);
+      $fromQuestion = intval($_POST['fromQuestion']);
+
+      $conditions = array();
+      $conditions['userID']['value'] = $uid;
+      $conditions['userID']['sign']  = '=';
+
+      $conditions['catID']['value'] = $catID;
+      $conditions['catID']['sign']  = '=';
+
+      if (isset($_GET['q']))
       {
-        unset($questions['data'][$this->GET_ROWS_COUNT]);
-        $questions['isAllElement'] = false;
+        $conditions['search']['value'] = htmlspecialchars($_GET['q'], ENT_NOQUOTES);
+        $conditions['search']['sign']  = '=';
       }
 
+      $questions['data'] = self::get_answers($conditions, ($catID > 0) ? self::$ORDER_BY_DATE : self::$ORDER_BY_LIKE, $fromQuestion, $this->GET_ROWS_COUNT);
+      Controller_Users::set_full_avatar_list_path($questions['data']);
 
       echo json_encode($questions);
     }

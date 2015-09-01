@@ -35,12 +35,21 @@
   );
 
 /**************************************** набор ajax запросов к модулю *****************************************/
-Route::set('UserGetQuestionAjax', 'user_question/get_questions_ajax')
+Route::set('UserGetQuestionsAjax', 'user_question/get_questions_ajax')
     ->defaults(array(
         'controller' => 'question',
         'action'     => 'get_questions_ajax',
       )
 );
+
+
+Route::set('UserGetAnswersAjax', 'user_question/get_answers_ajax')
+    ->defaults(array(
+        'controller' => 'question',
+        'action'     => 'get_answers_ajax',
+      )
+);
+
 
 Route::set('QuestionDoLikeAjax', 'module_question/do_like_ajax')
     ->defaults(array(

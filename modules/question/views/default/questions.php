@@ -1,7 +1,7 @@
 <?= HTML::style('default/css/questions.css');?>
   <span id = 'questions'>
   </span>
-  <span style="line-height:2" id ="load-questions-ajax" class = "btn">Больше вопросов</span>
+  <span style="line-height:2" id ="load-questions-ajax" class = "btn get-questions-ajax">Больше вопросов</span>
 
 
 <script>
@@ -28,18 +28,18 @@ function strip_tags(input, allowed)
 $(document).ready(function()
 {
   questions        = <?= json_encode($questions) ?>;
-  questions_amount = <?= count($questions) ?>;
+  questions_total  = <?= $questions_total ?>;
+  questions_amount = 0;
 
-  var isAllElement = <?= $isAllElement ?>;
-  add_questions(questions, isAllElement);
+  add_questions(questions);
 });
 
-  function add_questions(questions, isAllElement)
+  function add_questions(questions)
   {
     questions.forEach(add_questions_internal);
     questions_amount += questions.length;
 
-    if (isAllElement)
+    if (questions_total == questions_amount)
       $('#load-questions-ajax').css('visibility', 'hidden');
   }
 
@@ -142,10 +142,10 @@ $(document).ready(function()
         type: "POST",
         dataType: "json",
         url: "/user_question/get_questions_ajax",
-        data: "catID=<?=$catID?>&fromQuestion=" + questions_amount,
+        data: "uid=<?= $uid ?>&catID=<?= $catID ?>&fromQuestion=" + questions_amount,
         success: function(responce)
         {
-          add_questions(responce['data'], responce['isAllElement']);
+          add_questions(responce['data']);
 
           $('#load-questions-ajax').removeAttr('disabled');
         }
