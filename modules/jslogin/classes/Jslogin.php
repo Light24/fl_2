@@ -250,7 +250,6 @@ class Jslogin
       return false;
     $user_id = $token['user_id'];
 
-
     $params = array(
       'uids'         => $user_id,
       'fields'       => array('uid', 'first_name', 'last_name', 'sex', 'photo_big')
@@ -259,9 +258,10 @@ class Jslogin
     $data = json_decode(/*file_get_contents*/$this->getHTML('https://api.vk.com/method/users.get' . '?' . urldecode(http_build_query($params))), true);
     $data = $data['response']['0'];
 
+    $userInfo['login']      = $data['uid'];
     $userInfo['email']      = '';
-    $userInfo['uid_vk']     = '';
-    $userInfo['uid_fb']     = $data['uid'];
+    $userInfo['uid_vk']     = $data['uid'];
+    $userInfo['uid_fb']     = '';
     $userInfo['uid_tw']     = '';
     $userInfo['uid_in']     = '';
     $userInfo['first_name'] = $data['first_name'];
@@ -279,23 +279,30 @@ class Jslogin
       'code'          => $code,
       );
 
+
     parse_str($this->getHTML($this->auth_data['fb']['url_token'] . '?' . urldecode(http_build_query($params))), $token);
     if (!isset($token['access_token']) )
       return false;
 
-    $params = array('access_token' => $token['access_token']);
+    $params = array
+    (
+      'access_token' => $token['access_token'],
+    );
+
     $user_data = json_decode($this->getHTML($this->auth_data['fb']['url_data'] . '?' . urldecode(http_build_query($params))), true);
+    $name = explode(' ', $user_data['name']);
 
     if (!isset($user_data['id']))
       return false;
 
+    $userInfo['login']      = $user_data['id'];
     $userInfo['email']      = '';
     $userInfo['uid_vk']     = '';
     $userInfo['uid_fb']     = $user_data['id'];
     $userInfo['uid_tw']     = '';
     $userInfo['uid_in']     = '';
-    $userInfo['first_name'] = '';//$user_data['first_name'];
-    $userInfo['last_name']  = '';//$user_data['last_name'];
+    $userInfo['first_name'] = $name[0];//$user_data['first_name'];
+    $userInfo['last_name']  = $name[2];//$user_data['last_name'];
     $userInfo['sex']        = '';// $user_data['sex'];
     return true;
 
@@ -344,6 +351,7 @@ class Jslogin
       return false;
 
 
+    $userInfo['login']      = $response['user_id'];
     $userInfo['email']      = '';
     $userInfo['uid_vk']     = '';
     $userInfo['uid_fb']     = '';
@@ -372,13 +380,15 @@ class Jslogin
       return false;
 
 
+    $name = explode(' ', $userInfo['user']['full_name']);
+    $userInfo['login']      = $userInfo['user']['username'];
     $userInfo['email']      = '';
     $userInfo['uid_vk']     = '';
     $userInfo['uid_fb']     = '';
     $userInfo['uid_tw']     = '';
     $userInfo['uid_in']     = $userInfo['user']['id'];
-    $userInfo['first_name'] = '';//$user_data['first_name'];
-    $userInfo['last_name']  = '';//$user_data['last_name'];
+    $userInfo['first_name'] = $name[0];
+    $userInfo['last_name']  = $name[2];
     $userInfo['sex']        = '';// $user_data['sex'];
     return true;
   }

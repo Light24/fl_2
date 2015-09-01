@@ -197,7 +197,7 @@ class Controller_Users extends Controller
     $reg_psw       ='';
     $regPhoto      = '';
     $last_activity = '';
-    $login         = '';
+    $login         = $data['login'];
 
     if ($data['uid_vk'] != '')
       $where = 'uid_vk = ' . $uid_vk;
