@@ -1,7 +1,7 @@
 <?= HTML::style('default/css/questions.css');?>
   <span id = 'module_answers'>
   </span>
-  <span style="line-height:2" id ="load-answers-ajax" class = "btn get-questions-ajax">Больше вопросов</span>
+  <span style="line-height:2" id ="load-answers-ajax" class = "btn get-questions-ajax">Больше ответов</span>
 
 
 <script>
