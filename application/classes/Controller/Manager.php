@@ -13,7 +13,7 @@
     {
       $page['name'] = $this->request->param('page', '');
       $page['name'] = htmlspecialchars($page['name']);
-      $page['name'] = mysql_escape_string($page['name']);
+      $page['name'] = mysql_real_escape_string($page['name']);
       switch ($page['name'])
       {
         case 'help':
