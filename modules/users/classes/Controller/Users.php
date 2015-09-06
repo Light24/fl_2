@@ -186,7 +186,7 @@ class Controller_Users extends Controller
       }
     }
     $fio           = $data['first_name'] . ' ' . $data['last_name'];
-    $birth_date    = '';
+    $birth_date    = NULL;
     $city          = '';
     $sex           = $data['sex'];
     $email         = $data['email'];
