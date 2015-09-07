@@ -116,7 +116,7 @@
                             <ul class="sc">
                                 <li>
                                     
-                                    <a href='/registration/vk'">
+                                    <a href='/registration/vk'>
                                         <img class="soc-icons img-circle" alt="VK" src="/assets/default/img/vk.png">Вконтакте</a>
                                 </li>
                                 <li>
@@ -298,11 +298,11 @@
                             $("#showErrReg").hide();
                         }
                     })
-                    complete(function(json)
+                    .complete(function(json)
                     {
 
                     })
-                    done(function(json)
+                    .done(function(json)
                     {
                         if (json.success === true) {
                             window.location.href = "/user/registration/success";
@@ -313,7 +313,8 @@
                             $("#showErrReg").text(json.message);
 
                         }
-                    }).error(function() {
+                    })
+                    .error(function() {
                         $("#showErrReg").show();
                         $("#showErrReg").text('Ошибка! Попробуйте позже.');
                     });

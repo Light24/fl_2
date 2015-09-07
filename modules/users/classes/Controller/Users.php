@@ -293,7 +293,7 @@ class Controller_Users extends Controller
                     'last_activity', 'login'
                 ))
                 ->values(array($fio, $birth_date, $city, $sex,
-                    $email, $uid_vk, $uid_fb, $uid_tw, $uid_in,
+                    $email, '', '', '', '',
                     $reg_psw, 0, $regPhoto, 100, $last_activity, $login))
                 ->execute();
         $last_item = DB::select(array(DB::expr("LAST_INSERT_ID()"), "ID"))->execute()->get('ID');
