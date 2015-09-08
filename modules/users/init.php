@@ -90,6 +90,13 @@
     )
   );
 
+  Route::set('ModuleUsersRegistrationConfirmation', 'module_users/confirmation')
+    -> defaults(array(
+         'controller' => 'users',
+         'action'     => 'reg_confirmation',
+    )
+  );
+
   Route::set('ModuleUsersRegistrationSuccess', 'module_users/registration_success')
     -> defaults(array(
          'controller' => 'users',

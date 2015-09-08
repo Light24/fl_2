@@ -307,10 +307,10 @@ class Controller_Users extends Controller
         $message = $target . ' <b>' . $fio . '</b>! <br/>
         Благодарим Вас за регистрацию на сайте <a target="_blank" http://' . $_SERVER['SERVER_NAME'] . ' >' . $_SERVER['SERVER_NAME'] . '</a><br/>
         Для завершения регистрации, пожалуйста, пройдите по этой ссылке:
-        <a target="_blank" href="http://' . $_SERVER['SERVER_NAME'] . '/confirmation?id=' . $last_item . '&hash=' . $hash . '"> подтверждение регистрации</a>
+        <a target="_blank" href="http://' . $_SERVER['SERVER_NAME'] . '/module_users/confirmation?id=' . $last_item . '&hash=' . $hash . '"> подтверждение регистрации</a>
         <br/><br/>
         Если ссылка не активна, то скопируйте в адресную строку браузера этот текст:
-        http://' . $_SERVER['SERVER_NAME'] . '/confirmation?id=' . $last_item . '&hash=' . $hash . '<br/>
+        http://' . $_SERVER['SERVER_NAME'] . '/module_users/confirmation?id=' . $last_item . '&hash=' . $hash . '<br/>
         ';
 
         $this->sendEmail('Регистрация', $message, $fio, $email);
@@ -325,6 +325,47 @@ class Controller_Users extends Controller
     $output = json_encode($output);
     $this->response->body($output);
   }
+
+  public function action_reg_confirmation()
+  {
+    $uid = (int) htmlspecialchars((Arr::get($_GET, 'id')), ENT_NOQUOTES);
+    $hash = htmlspecialchars((Arr::get($_GET, 'hash')), ENT_NOQUOTES);
+
+    if (($uid != '') && ($hash != ''))
+    {
+        $verfifcationHash = DB::select()->from('conrol_hash')
+                        ->where("user_id", "=", $uid)->execute()->get('hash');
+
+        if ($hash === $verfifcationHash)
+        {
+            $userUpgrade = DB::update('users')->set(array('confirmed' => 1))
+                            ->where('id', '=', $uid)->execute();
+
+            $query = DB::select()->from('users')->where("id", '=', $uid)->limit(1)->execute();
+
+            if (count($query) == 1)
+            {
+              $this->updateSession($query[0]);
+            }
+
+            DB::delete('conrol_hash')->where('user_id', '=', $uid)
+                    ->where('hash', '=', $hash)
+                    ->execute();
+
+
+          header( 'Location: ' . URL::base() . 'user/profile' ) ; die();
+        }
+        else
+        {
+          header( 'Location: ' . URL::base() . '' ) ; die();
+        }
+    }
+    else
+    {
+        header( 'Location: ' . URL::base() . '' ) ; die();
+    }
+  }
+
 
 
   private function sendEmail($theme, $message, $from, $email)
