@@ -16,8 +16,8 @@ return array
          'fb' => array
          (
            'link_auth'              => 'https://www.facebook.com/dialog/oauth',
-           'client_id'              => '448896308630516',
-           'client_secret'          => '81170fedae0c53e37c2673d3995eeb44',
+           'client_id'              => '954305371292231',
+           'client_secret'          => '5452825b9895d989a8526f45a20ae860',
            'redirect_register_uri'  => 'http://env-5970640.jelastic.regruhosting.ru/module_users/social_registration/fb',
            'redirect_login_uri'     => 'http://env-5970640.jelastic.regruhosting.ru/module_users/login/fb',
            'url_token'              => 'https://graph.Facebook.com/oauth/access_token',
