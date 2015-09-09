@@ -9,7 +9,7 @@ $req=($_SERVER['REQUEST_URI']);
 
       <? foreach ($categories as $item_c) { ?>
           <div class="right-drop">
-              <a style="line-height:3" href="/<?= $linkPrefix ?>/<?=$item_c['id']?><? if (isset($_GET['q'])) echo '?q=' . $_GET['q']; ?>" class="btn right-btn dropdown-toggle <?if (isset($cid) && $item_c['id'] == $cid){?>right-bt-active<?}?>" <!--data-toggle="dropdown"-->
+              <a style="line-height:3" href="/<?= $linkPrefix ?>/<?= $item_c['id'] ?>" class="btn right-btn dropdown-toggle <?if (isset($cid) && $item_c['id'] == $cid){?>right-bt-active<?}?>" <!--data-toggle="dropdown"-->
               <?= $item_c['category'] ?>
               </a>
 

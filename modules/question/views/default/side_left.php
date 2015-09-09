@@ -1,7 +1,7 @@
 <div class="left-block">
 
     <div class="topical_issues">
-        <p class="head-block"><a href = "/question/best">Актуальные вопросы:</a></p>
+        <p class="head-category"><a href = "/question/best">Актуальные вопросы:</a></p>
         <ul class="topical">
             <?
             foreach ($questionP as $itemP)
@@ -37,7 +37,7 @@
     </div>
 
     <div class="active_members">
-        <p class="head-block"><a href = "/user/leaders?target=3">Активные участники:</a></p>
+        <p class="head-category"><a href = "/user/leaders?target=3">Активные участники:</a></p>
         <ul class="topical">
             <?
             foreach ($usersA as $itemUser)
