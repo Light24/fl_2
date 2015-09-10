@@ -158,6 +158,11 @@
         return $browser;
     }
 
+    public static function isValidIP($ip) {
+        $pattern = "/^([1]?\d{1,2}|2[0-4]{1}\d{1}|25[0-5]{1})(\.([1]?\d{1,2}|2[0-4]{1}\d{1}|25[0-5]{1})){3}$/";
+        return (preg_match($pattern, $ip) > 0) ? true : false;
+    }
+
     public static function getIp() {
         static $ip = null;
         if ($ip === null) {
