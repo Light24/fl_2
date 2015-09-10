@@ -15,7 +15,7 @@
             <ul class="nav nav-tabs">
                 <li class = "<? if ($select_category == '' || strcmp($select_category , 'points') == 0) : ?>active<? endif ?>"><a href="/user/leaders/points/<?= $duration_type ?>/<?= $cid ?>">набранным баллам</a>
                 </li>
-                <li class = "<? if (strcmp($select_category , 'answers') == 0) : ?>active<? endif ?>"><a href="/user/leaders/answers/<?= $duration_type ?>/<?= $cid ?>">количесту ответов</a>
+                <li class = "<? if (strcmp($select_category , 'answers') == 0) : ?>active<? endif ?>"><a href="/user/leaders/answers/<?= $duration_type ?>/<?= $cid ?>">количеству ответов</a>
                 </li>
                 <li class = "<? if (strcmp($select_category , 'questions') == 0) : ?>active<? endif ?>"><a href="/user/leaders/questions/<?= $duration_type ?>/<?= $cid ?>">количеству вопросов</a>
                 </li>

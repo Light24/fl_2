@@ -902,20 +902,27 @@ position: relative;
   text-decoration: none !important;
 }
 
+
+.issues a  > p:hover,
+.issues a > p:focus,
+.issues a > p:active,
+
+.name-members > p:hover,
+.name-members > p:focus,
+.name-members > p:active,
+
 .right-drop > .right-btn:hover,
 .right-drop > .right-btn:active,
 .right-drop > .right-btn:focus {
     outline: none;
     color: #45749d;
-
 }
 
 .right-bt-active
 {
     background-color: #6e9cd9; //rgba(10, 14, 200, 0.37);
-    border: 1px solid blue;
+    //border: 1px solid blue;
     border-radius: 5px;
-    box-shadow: 0 0 10px rgba(10, 10, 255, 1);
     height: 41px;
     line-height: 3;
     color: white;
@@ -1315,7 +1322,7 @@ outline: none;
 }
 .result-ul > li > a {
     color: #2d2d2d;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 400;
     border: 1px solid transparent;
     border-radius: 4px 4px 0 0;
@@ -1745,7 +1752,7 @@ line-height: 40px;
 
 .nav-tabs > li > a {
 color:#484848;
-font-size: 12px;
+font-size: 13px;
 border:none;
 }
 .nav-tabs > li > a > span {

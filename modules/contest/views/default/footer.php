@@ -43,7 +43,7 @@
                         </div>
                         <div id="showErrLogin" class="alert error"><i class=""></i>
                         </div>
-                        <input id="emailLogin"  class="styler" type="text" name="emailLogin" placeholder="Адрес электронной почты...">
+                        <input id="emailLogin" class="styler" type="text" name="emailLogin" placeholder="Адрес электронной почты...">
                         <input id="passwordLogin"  class="styler" type="password" name="passwordLogin" value="" placeholder="Пароль...">
                     </fieldset>
 
@@ -66,6 +66,7 @@
                         </li>
                     </ul>
 
+                    <font style = "clear: left; display: block; position: relative; top: 10px; text-align: center;"> или <a href = '/user/registration/'> зарегистрируйтесь </a> </font>
 
                 </form>
             </div>
