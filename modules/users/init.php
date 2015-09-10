@@ -34,7 +34,7 @@
     )
   );
 
-  Route::set('ModuleUsersProfileLogin', 'module_users/login/(<type>)')
+  Route::set('ModuleUsersProfileLogin', 'module_users/login(/<type>)')
     -> defaults(array(
          'controller' => 'users',
          'action'     => 'login',
