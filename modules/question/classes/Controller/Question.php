@@ -42,7 +42,8 @@
                   'uid'               => NULL,
                   'catID'             => $catID,
                   'questions'         => $questions,
-                  'questions_total'   => $questions_total)));
+                  'questions_total'   => $questions_total,
+                  'is_search'         => isset($_GET['q']),)));
     }
 
 
@@ -79,7 +80,7 @@
         $linkPrefix = 'user' . '/' . 'leaders' . '/';
         $linkPrefix .= $sort_type . '/' . $duration_type;
       }
-      else if (strpos($_SERVER['REQUEST_URI'], 'user') !== FALSE)
+      else if (strpos($_SERVER['REQUEST_URI'], 'user') !== FALSE && strpos($_SERVER['REQUEST_URI'], 'registration') === FALSE)
       {
         $linkPrefix = 'user' . '/' . 'question' . '/' . 'cats' . '/';
         $linkPrefix .= ($uid > 0) ? $uid : $uidProfile;
@@ -270,7 +271,8 @@
                   'questions'         => $user_question,
                   'questions_total'   => $questions_total,
                   'answers_total'     => $answers_total,
-                  'user'              => $user)));
+                  'user'              => $user,
+                  'is_search'         => isset($_GET['q']),)));
     }
 
 

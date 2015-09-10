@@ -1339,6 +1339,13 @@ outline: none;
   text-decoration: none ;
 }
 
+.small
+{
+  font-size: 10px;
+  position: relative;
+  display: inline-block;
+}
+
 .select-res {
     width: 100%;
     height: 35px;

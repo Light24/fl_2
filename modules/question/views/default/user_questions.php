@@ -22,10 +22,20 @@
     <!-- Tab panes -->
     <div class="tab-content">
         <div class="tab-pane active" id="quest">
+          <? if ($is_search) : ?>
+            <font class = "small">
+              найдено вопросов: <?= $questions_total ?>
+            </font>
+          <? endif ?>
           <? require_once('questions.php'); ?>
         </div>
 
         <div class="tab-pane" id="answer">
+          <? if ($is_search) : ?>
+            <font class = "small">
+              найдено ответов: <?= $answers_total ?>
+            </font>
+          <? endif ?>
           <? require_once('answers.php'); ?>
         </div>
 
