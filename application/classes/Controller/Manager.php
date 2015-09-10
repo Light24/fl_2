@@ -162,17 +162,17 @@
         static $ip = null;
         if ($ip === null) {
             if (isset($_SERVER)) {
-                if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $this->isValidIp($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && self::isValidIp($_SERVER['HTTP_X_FORWARDED_FOR'])) {
                     $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-                } elseif (isset($_SERVER['HTTP_CLIENT_IP']) && $this->isValidIp($_SERVER['HTTP_CLIENT_IP'])) {
+                } elseif (isset($_SERVER['HTTP_CLIENT_IP']) && self::isValidIp($_SERVER['HTTP_CLIENT_IP'])) {
                     $ip = $_SERVER['HTTP_CLIENT_IP'];
                 } else {
                     $ip = $_SERVER['REMOTE_ADDR'];
                 }
             } else {
-                if (getenv('HTTP_X_FORWARDED_FOR') && $this->isValidIp(getenv('HTTP_X_FORWARDED_FOR'))) {
+                if (getenv('HTTP_X_FORWARDED_FOR') && self::isValidIp(getenv('HTTP_X_FORWARDED_FOR'))) {
                     $ip = getenv('HTTP_X_FORWARDED_FOR');
-                } elseif (getenv('HTTP_CLIENT_IP') && $this->isValidIp(getenv('HTTP_CLIENT_IP'))) {
+                } elseif (getenv('HTTP_CLIENT_IP') && self::isValidIp(getenv('HTTP_CLIENT_IP'))) {
                     $ip = getenv('HTTP_CLIENT_IP');
                 } else {
                     $ip = getenv('REMOTE_ADDR');
