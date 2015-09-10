@@ -558,7 +558,7 @@
         $id_work = (int) htmlspecialchars(Arr::get($_POST, 'idWork'), ENT_NOQUOTES);
 
         $id_user = $user['id'];
-        $dt = date('Y-m-d [H:i:s]');
+        $dt = date('Y-m-d H:i:s');
         $browser = Controller_Manager::getBrowser();
         $ip = Controller_Manager::getIp();
         $verification = DB::query(Database::SELECT, "SELECT count(*) FROM `answers` WHERE 
@@ -593,7 +593,7 @@
         $id_work = (int) htmlspecialchars(Arr::get($_POST, 'idWork'), ENT_NOQUOTES);
 
         $id_user = $user['id'];
-        $dt = date('Y-m-d [H:i:s]');
+        $dt = date('Y-m-d H:i:s');
         $browser = Controller_Manager::getBrowser();
         $ip = Controller_Manager::getIp();
         $verification = DB::query(Database::SELECT, "SELECT count(*) FROM `answers_no` WHERE 
@@ -632,7 +632,7 @@
         $id_work = (int) htmlspecialchars(Arr::get($_POST, 'idWork'), ENT_NOQUOTES);
 
         $id_user = $user['id'];
-        $dt = date('Y-m-d [H:i:s]');
+        $dt = date('Y-m-d H:i:s');
         $browser = Controller_Manager::getBrowser();
         $ip = Controller_Manager::getIp();
         $verification = DB::query(Database::SELECT, "SELECT count(*) FROM `answers_no` WHERE 
