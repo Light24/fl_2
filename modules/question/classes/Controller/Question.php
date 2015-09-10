@@ -70,9 +70,9 @@
                     'questionP' => $questions, 'usersA' => $usersA)));
     }
 
-    static public function get_prefix_cats($uid, $uidProfile)
+    static public function get_prefix_cats($uid, $uidProfile, $type = 'categories')
     {
-      if (strpos($_SERVER['REQUEST_URI'], 'leaders') !== FALSE)
+      if (strpos($_SERVER['REQUEST_URI'], 'leaders') !== FALSE && strpos($type, 'categories') !== FALSE)
       {
         $sort_type     = htmlspecialchars(Request::initial()->param('sort_type', 'points'), ENT_NOQUOTES);
         $duration_type = htmlspecialchars(Request::initial()->param('duration_type', 'all'), ENT_NOQUOTES);
@@ -80,7 +80,7 @@
         $linkPrefix = 'user' . '/' . 'leaders' . '/';
         $linkPrefix .= $sort_type . '/' . $duration_type;
       }
-      else if (strpos($_SERVER['REQUEST_URI'], 'user') !== FALSE && strpos($_SERVER['REQUEST_URI'], 'registration') === FALSE)
+      else if (strpos($_SERVER['REQUEST_URI'], 'user') !== FALSE && strpos($_SERVER['REQUEST_URI'], 'registration') === FALSE && ($uid > 0 || $uidProfile > 0))
       {
         $linkPrefix = 'user' . '/' . 'question' . '/' . 'cats' . '/';
         $linkPrefix .= ($uid > 0) ? $uid : $uidProfile;

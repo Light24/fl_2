@@ -79,7 +79,7 @@ abstract class Controller_Common extends Controller_Template {
         $uid        = $this->request->param('userID', 0);
         $cid        = $this->request->param('catID', 0);
 
-        $catsPrefix = Controller_Question::get_prefix_cats($uid, $user['id']);
+        $catsPrefix = Controller_Question::get_prefix_cats($uid, $user['id'], 'search');
 
         $this->template->header = View::factory('/header', array('user' => $user, 'catsPrefix' => $catsPrefix, 'uid' => $uid, 'cid' => $cid));
         Session::instance()->set('isMsg', 0);
