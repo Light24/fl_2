@@ -800,7 +800,7 @@ class Controller_Users extends Controller
         }
 
         $id_user = (int) Arr::get($user, 'id');
-        $dt = date('Y-m-d [H:i:s]');
+        $dt = date('Y-m-d H:i:s');
         $msg = trim(htmlspecialchars(Arr::get($_POST, 'msg'), ENT_NOQUOTES));
         if ($msg != '') {
             $query = DB::insert('messages', array('user_send', 'user_res', 'message', 'date_post', 'flag'))
