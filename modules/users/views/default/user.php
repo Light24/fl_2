@@ -150,40 +150,24 @@ if (Arr::get($user, 'id') != '')
                 <div class="btn-pers-bl">
                     <ul>
                             <li style="height:auto">
-                                <a style="font-size:12px;" <? if (Arr::get($user, 'id') != '') { ?> data-toggle="modal" data-target="#modalSMS" href="#"<? } else { ?>href="/user/registration" <?}?>>
+                                <a style="font-size:12px;" href="#" data-toggle="modal" <? if ($user != NULL) : ?> data-target="#modalSMS"<? else : ?> data-target="#myModal" <? endif ?>>
                                     <img class="btnimg" src="/assets/default/img/message.png" alt="">
                                     Отправить сообщение
                                 </a>
 
-                                <a style="font-size:12px;" href="/user/photos/<?= $profile['id'] ?>">
+                                <a style="font-size:12px;" <? if ($user != NULL) : ?> href="/user/photos/<?= $profile['id'] ?>" <? else : ?> href="#" data-toggle="modal" data-target="#myModal" <? endif ?>>
                                     <img class="btnimg" src="/assets/default/img/photo.png" alt=""> 
                                     Фотографии
                                 </a>
                             </li>
-                        <!--       <li style="height:auto">
-           <b> Дата рождения:</b> <? //= $profile['date_birth']  ?>     
-       </li>
-       <li style="height:auto">
-           <b>Город:</b> <? //= $profile['city']  ?>     
-       </li>-->
-
                     </ul>
-
-
                 </div>
-
-
             </div>
             <?
             $getBest = Arr::get($_GET, 'sBest');
             ?>
-
         </div>
-
-
     </div>
-
-
 
     <script>
     $("#btn-sms").click(function(e)
