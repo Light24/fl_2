@@ -35,15 +35,16 @@
 /********************************************************** Страницы вопросов **********************************************************/
     public function action_question_best()
     {
-      $question = Request::factory('user_question/get_questions/catID=0/' . Controller_Question::$ORDER_BY_LIKE)->execute();
+      $question = Request::factory('user_question/get_questions/all/0/' . Controller_Question::$ORDER_BY_LIKE)->execute();
       $this->template->content = $question->body();
     }
 
     public function action_get_questions()
     {
-      $catID = intval($this->request->param('catID', 0));
+      $cid = intval($this->request->param('catID', 0));
+      $duration_cat = htmlspecialchars($this->request->param('duration_cat', 'all'));
 
-      $question = Request::factory("user_question/get_questions/catID=$catID")->execute();
+      $question = Request::factory('user_question/get_questions/' . $duration_cat . '/' . $cid)->execute();
       $this->template->content = $question->body();
     }
 

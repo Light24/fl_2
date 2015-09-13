@@ -142,7 +142,7 @@ $(document).ready(function()
         type: "POST",
         dataType: "json",
         url: "/user_question/get_answers_ajax",
-        data: "uid=<?= $uid ?>&catID=<?= $catID ?>&fromQuestion=" + answers_amount,
+        data: "duration_cat=<?= $duration_cat ?>&uid=<?= $uid ?>&catID=<?= $catID ?>&fromQuestion=" + answers_amount,
         success: function(responce)
         {
           add_answers(responce['data']);

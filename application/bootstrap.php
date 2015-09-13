@@ -156,14 +156,7 @@ Route::set('question_best', 'question/best')
       )
 );
 
-Route::set('question_all', '(question(/all))')
-    ->defaults(array(
-        'controller' => 'manager',
-        'action'     => 'get_questions',
-      )
-);
-
-Route::set('question_cats', 'question/cats(/<catID>)', array('catID' => '[0-9]+'))
+Route::set('question_cats', '(question/<duration_cat>(/<catID>))', array('duration_cat' => '[a-zA-Z]+'), array('catID' => '[0-9]+'))
     ->defaults(array(
         'controller' => 'manager',
         'action'     => 'get_questions',

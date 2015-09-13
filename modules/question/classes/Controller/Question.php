@@ -18,11 +18,19 @@
       $orderBy = intval($this->request->param('orderBY'));
       $orderBy = min(max(self::$ORDER_BY_DATE, $orderBy), self::$ORDER_BY_LIKE);
 
+      $duration_cat = htmlspecialchars($this->request->param('duration_cat'));
+
       $conditions = array();
       $conditions['userID']['value'] = $user['id'];
       $conditions['userID']['sign']  = '<>';
       $conditions['catID']['value'] = $catID;
       $conditions['catID']['sign']  = '=';
+      if (strcmp($duration_cat, 'week') == 0)
+      {
+        $conditions['duration_cat']['value'] = 60 * 60 * 24 * 7;
+        $conditions['duration_cat']['sign']  = '>=';
+      }
+
       if (isset($_GET['q']))
       {
         $conditions['search']['value'] = htmlspecialchars($_GET['q'], ENT_NOQUOTES);
@@ -43,6 +51,7 @@
                   'catID'             => $catID,
                   'questions'         => $questions,
                   'questions_total'   => $questions_total,
+                  'duration_cat'      => $duration_cat,
                   'is_search'         => isset($_GET['q']),)));
     }
 
@@ -95,7 +104,8 @@
       }
       else
       {
-        $linkPrefix = 'question' . '/' . 'cats';
+        $duration_cat = htmlspecialchars(Request::initial()->param('duration_cat', 'all'));
+        $linkPrefix = 'question' . '/' . $duration_cat;
       }
       return $linkPrefix;
     }
@@ -272,6 +282,7 @@
                   'questions_total'   => $questions_total,
                   'answers_total'     => $answers_total,
                   'user'              => $user,
+                  'duration_cat'      => 'all',
                   'is_search'         => isset($_GET['q']),)));
     }
 
@@ -288,6 +299,8 @@
         if (isset($conditions['userID']))
           $where = (isset($where) ? $where . ' AND ' : '') . 'question.user_id ' . $conditions['userID']['sign'] . intval($conditions['userID']['value']);
 
+        if (isset($conditions['duration_cat']))
+          $where = (isset($where) ? $where . ' AND ' : '') . 'question.date_post ' . $conditions['duration_cat']['sign'] . ' (NOW() - ' . $conditions['duration_cat']['value'] . ')';
 
         if (isset($conditions['search']))
           $where = (isset($where) ? $where . ' AND ' : '') . ' `text_q` LIKE \'%' . htmlspecialchars($conditions['search']['value'], ENT_NOQUOTES) . '%\'';
@@ -490,13 +503,24 @@
       if (!Request::initial()->is_ajax())
         exit(0);
 
+      $duration_cat = $_POST['duration_cat'];
+
       $uid          = intval($_POST['uid']);
       $catID        = intval($_POST['catID']);
       $fromQuestion = intval($_POST['fromQuestion']);
 
       $conditions = array();
-      $conditions['userID']['value'] = $uid;
-      $conditions['userID']['sign']  = '=';
+      if (strcmp($duration_cat, 'week') == 0)
+      {
+        $conditions['duration_cat']['value'] = 60 * 60 * 24 * 7;
+        $conditions['duration_cat']['sign']  = '>=';
+      }
+
+      if ($uid > 0)
+      {
+        $conditions['userID']['value'] = $uid;
+        $conditions['userID']['sign']  = '=';
+      }
 
       $conditions['catID']['value'] = $catID;
       $conditions['catID']['sign']  = '=';
@@ -519,11 +543,20 @@
       if (!Request::initial()->is_ajax())
         exit(0);
 
+      $duration_cat = $_POST['duration_cat'];
+
       $uid          = intval($_POST['uid']);
       $catID        = intval($_POST['catID']);
       $fromQuestion = intval($_POST['fromQuestion']);
 
       $conditions = array();
+
+      if (strcmp($duration_cat, 'week') == 0)
+      {
+        $conditions['duration_cat']['value'] = 60 * 60 * 24 * 7;
+        $conditions['duration_cat']['sign']  = '>=';
+      }
+
       $conditions['userID']['value'] = $uid;
       $conditions['userID']['sign']  = '=';
 

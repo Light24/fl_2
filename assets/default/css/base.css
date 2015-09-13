@@ -1341,7 +1341,7 @@ outline: none;
 .result-ul > li > a:hover,
 .result-ul > li > a:focus
 {
-  color: #555;
+  color: #45749d;
   background-color: #eee;
   text-decoration: none ;
 }

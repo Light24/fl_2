@@ -1,5 +1,5 @@
 ﻿<?
-  Route::set('UserQuestion', 'user_question/get_questions(/catID=<catID>(/<orderBY>))')
+  Route::set('UserQuestion', 'user_question/get_questions(/<duration_cat>(/<catID>(/<orderBY>)))')
     ->defaults(array(
         'controller' => 'question',         //cabinet.loyalty.name
         'action' => 'get_questions',
