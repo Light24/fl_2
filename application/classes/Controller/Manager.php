@@ -33,6 +33,14 @@
     }
 
 /********************************************************** Страницы вопросов **********************************************************/
+    public function action_question()
+    {
+      $qid = $this->request->param('qid', 0);
+
+      $question = Request::factory('module_question/question_' . $qid)->execute();
+      $this->template->content = $question->body();
+    }
+
     public function action_question_best()
     {
       $question = Request::factory('user_question/get_questions/all/0/' . Controller_Question::$ORDER_BY_LIKE)->execute();

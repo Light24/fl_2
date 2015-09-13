@@ -26,8 +26,8 @@
                     <?
                     }
                     ?>
-                    <div class="issues">
-                      <a href="#">
+                    <div class = 'issues'>
+                      <a href = '/question_<?= $itemP['uidQuest'] ?>'>
                         <p><?= strip_tags(mb_substr($itemP['text_q'], 0, 180)) ?></p>
                       </a>
                     </div>
@@ -75,19 +75,4 @@
 
 
     </div>
-    <!--
-                    <div class="hashtags">
-                        <a href="#">#Lorem</a>
-                        <a href="#">#Ipsum</a>
-                        <a href="#">#is</a>
-                        <a href="#">#simply</a>
-                        <a href="#">#dummy</a>
-                        <a href="#">#text</a>
-                        <a href="#">#of</a>
-                        <a href="#">#the</a>
-                        <a href="#">#printing</a>
-                        <a href="#">#and</a>
-                        <a href="#">#typesetting</a>
-                        <a href="#">#industry</a>
-                    </div>-->
 </div>

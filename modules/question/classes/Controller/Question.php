@@ -11,9 +11,35 @@
       parent::before();
     }
 
+    public function action_show()
+    {
+      $qid = intval($this->request->param('qid', 0));
+
+
+      $questions = DB::query(Database::SELECT, "SELECT question.*,question.id as uidQuest, category.*,users.*, users.fio as `user`,
+          `l`.`cnt` as `likes`, `ly`.`cnt` as `likey`, `ln`.`cnt` as `liken`, photos_q.*
+          FROM `question`
+          LEFT JOIN `users` ON question.user_id = users.id
+          LEFT JOIN `category` ON question.contest_id = category.id
+          LEFT JOIN `photos_q` ON question.id = photos_q.question_id
+          LEFT JOIN (SELECT count(*) `cnt`, `work_id` FROM `answers_yes` GROUP BY work_id) as ly  ON question.id = ly.work_id
+          LEFT JOIN (SELECT count(*) `cnt`, `work_id` FROM `answers_no` GROUP BY work_id) as ln  ON question.id = ln.work_id
+          LEFT JOIN (SELECT count(*) `cnt`, `work_id` FROM `answers` GROUP BY work_id) as l  
+          ON question.id = l.work_id WHERE question.id = " . $qid)->execute()->as_array();
+
+      Controller_Users::set_full_avatar_list_path($questions);
+      $this->response->body(View::factory('default/show', array(
+                  'user'              => NULL,
+                  'uid'               => NULL,
+                  'catID'             => NULL,
+                  'duration_cat'      => NULL,
+                  'questions'         => $questions,
+                  'questions_total'   => sizeof($questions),)));
+    }
+
     public function action_get_questions()
     {
-      $user    =  Session::instance()->get('user');
+      $user    = Session::instance()->get('user');
       $catID   = intval($this->request->param('catID', 0));
       $orderBy = intval($this->request->param('orderBY'));
       $orderBy = min(max(self::$ORDER_BY_DATE, $orderBy), self::$ORDER_BY_LIKE);
@@ -72,7 +98,6 @@
             ORDER BY qnt DESC LIMIT 5
             ")->execute()->as_array();
         Controller_Users::set_full_avatar_list_path($usersA);
-
 
         $this->response->body(View::factory('default/side_left', array(
                     'user'      => $user,

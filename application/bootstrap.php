@@ -142,6 +142,13 @@ Kohana::modules(array(
 
 
 // Вопросы
+Route::set('question', 'question_<qid>', array('qid' => '[0-9]+'))
+    ->defaults(array(
+        'controller' => 'manager',
+        'action'     => 'question',
+      )
+);
+
 Route::set('question_ask', 'question/ask')
     ->defaults(array(
         'controller' => 'manager',

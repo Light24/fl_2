@@ -33,6 +33,13 @@
         'action'     => 'get_user_questions'
     )
   );
+  
+  Route::set('ModuleQuestion', 'module_question/question_<qid>', array('qid' => '[0-9]+'))
+    ->defaults(array(
+        'controller' => 'question',
+        'action'     => 'show'
+    )
+  );
 
 /**************************************** набор ajax запросов к модулю *****************************************/
 Route::set('UserGetQuestionsAjax', 'user_question/get_questions_ajax')
