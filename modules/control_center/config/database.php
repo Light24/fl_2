@@ -18,10 +18,10 @@ return array
        *
        * Ports and sockets may be appended to the hostname.
        */
-      'hostname'   => 'mysql89065-env-0732241.jelastic.regruhosting.ru',
+      'hostname'   => 'mysql89286-env-3436019.jelastic.regruhosting.ru',
       'database'   => 'u0070664_default',
       'username'   => 'root',
-      'password'   => 'IQXpmi57128',
+      'password'   => 'XVEzlb73139',
       'persistent' => FALSE,
     ),
     'table_prefix' => '',
